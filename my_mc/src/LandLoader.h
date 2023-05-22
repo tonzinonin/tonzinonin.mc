@@ -1,152 +1,120 @@
 #pragma once
 #include "ves/Camera.h"
 #include "CubeGameObject.h"
+#include <algorithm>
 
 #define SCREEN_WIDTH 768
 #define SCREEN_HEIGHT 768
 
-float fpositions[] =
-{ 
-    -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,   1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
+int checkout[105][105][105];
 
-    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,   0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
+int dx[] = {1 , -1 , 0 , 0 , 0 , 0};
+int dy[] = {0 , 0 , 1 , -1 , 0 , 0};
+int dz[] = {0 , 0 , 0 , 0 , -1 , 1};
+float mi = 0x3f3f3f3f;
+float ma = -0x3f3f;
 
-    -0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-
-     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-
-    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,   1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,   1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-
-    -0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,   0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,   0.0f, 1.0f
-
-};
-
-
-float skybox[] =
+enum CubeType
 {
-    -1.0f,  1.0f, -1.0f,
-    -1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-
-    -1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f, -1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
-
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-
-    -1.0f, -1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f, -1.0f,  1.0f,
-    -1.0f, -1.0f,  1.0f,
-
-    -1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f, -1.0f,
-     1.0f,  1.0f,  1.0f,
-     1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f,  1.0f,
-    -1.0f,  1.0f, -1.0f,
-
-    -1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-     1.0f, -1.0f, -1.0f,
-     1.0f, -1.0f, -1.0f,
-    -1.0f, -1.0f,  1.0f,
-     1.0f, -1.0f,  1.0f
+    GRASS_BLOCK, DIRT, SKYBOX
 };
-
-enum TerrainCubeType
+struct BoxAxisStruct
 {
-    GRASS_BLOCK , DIRT
+    float p_x, p_y, p_z;
+    float n_x, n_y, n_z;
+    float Cubesizehalf = 0.5;
+    const void GetAxis(float x , float y , float z)
+    {
+        p_x = x + Cubesizehalf;
+        p_y = y + Cubesizehalf;
+        p_z = z + Cubesizehalf;
+        n_x = x - Cubesizehalf;
+        n_y = y - Cubesizehalf;
+        n_z = z - Cubesizehalf;
+
+    }
 };
-struct TerrainCube
+struct CubeStruct
 {
-    float x, y, z;
-    TerrainCubeType type;
+    glm::vec3 location;
+    CubeType type;
+    BoxAxisStruct BoxAxis;
 };
+
 
 class Terrain
 {
 private:
-    std::vector<TerrainCube> Cube;
+
 	CubeGameObject grass_block;
     CubeGameObject dirt;
+
 public:
-	Terrain() : grass_block("res/texture/terrian/grass_block", "res/shader/basic.vert", "res/shader/basic.frag",fpositions,sizeof(fpositions)),
-                dirt("res/texture/terrian/dirt", "res/shader/basic.vert", "res/shader/basic.frag", fpositions,sizeof(fpositions))
+
+    std::vector<CubeStruct> CubeInfo;
+
+	Terrain() : grass_block("res/texture/terrian/grass_block", "res/shader/basic.vert", "res/shader/basic.frag"),
+                dirt("res/texture/terrian/dirt", "res/shader/basic.vert", "res/shader/basic.frag")
     {
         TerrainInit();
     }
     void TerrainInit()
     {
-        for (float i = -5; i < 5; i+= 0.2)
-        {
-            for (float j = -5; j < 5; j+= 0.2)
-            {
-                float perlin = PerlinNoise(glm::vec2(i, j));
-                float y = 0;
-                while(1)
-                {
-                    if (y > perlin * 2 + 2)
-                    {
-                        Cube.push_back({i , y , j , GRASS_BLOCK});
-                        break;
-                    }
-                    Cube.push_back({ i , y , j , DIRT});
-                    y += 0.2f;
-                }
-            }
-        }
+        BoxAxisStruct tmp;
+        tmp.GetAxis(0, 0, 0);
+        CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
+        //for (int i = -50; i < 50; i += 1)
+        //{
+        //    for (int j = -50; j < 50; j += 1)
+        //    {
+        //        float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
+        //        mi = std::min(mi, perlin);
+        //        ma = std::max(ma, perlin);
+        //        std::cout <<"noisevalue : "<< perlin << std::endl;
+        //        int y = 0;
+        //        while(1)
+        //        {
+        //            if (y > perlin * 10 + 10)
+        //            {
+        //                BoxAxisStruct tmp;
+        //                tmp.GetAxis(i, y, j);
+        //                CubeInfo.push_back({ glm::vec3(i , y , j) , GRASS_BLOCK , tmp});
+        //                
+        //                for (int k = 0; k < 6; k++)
+        //                {
+        //                    int lx = i + dx[k] + 51;
+        //                    int ly = y + dy[k] + 51;
+        //                    int lz = j + dz[k] + 51;
+        //                    checkout[lx][ly][lz]++;
+        //                }
+        //                break;
+        //            }         
+
+        //            BoxAxisStruct tmp;
+        //            tmp.GetAxis(i, y, j);
+        //            CubeInfo.push_back({ glm::vec3(i , y , j) , DIRT , tmp});
+
+        //            for (int k = 0; k < 6; k++)
+        //            {
+        //                int lx = i + dx[k] + 51;
+        //                int ly = y + dy[k] + 51;
+        //                int lz = j + dz[k] + 51;
+        //                checkout[lx][ly][lz]++;
+        //            }
+        //            y += 1;
+        //        }
+        //    }
+        //}
+        //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
     void TerrainDraw(Camera& camera)
     {
-        for (auto it : Cube)
+        for (auto it : CubeInfo)
         {
-            if (it.type == DIRT) dirt.DrawCube(camera, glm::vec3(it.x , it.y , it.z));
-            if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera , glm::vec3(it.x, it.y, it.z));
+            if (checkout[(int)it.location.x + 51][(int)it.location.y + 51][(int)it.location.z + 51] == 6) continue;
+            if (it.type == DIRT) dirt.DrawCube(camera, it.location);
+            if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera , it.location);
         }
     }
 
@@ -161,7 +129,7 @@ public:
     float PerlinNoise(glm::vec2 p)
     {
         glm::vec2 pi = glm::floor(p);
-        glm::vec2 pf = (p - pi) / glm::vec2(2 , 2);
+        glm::vec2 pf = (p - pi);
         glm::vec2 w = glm::vec2(pf.x * pf.x * (3.0 - 2.0 * pf.x) ,
                                 pf.y * pf.y * (3.0 - 2.0 * pf.y));
 
@@ -174,17 +142,16 @@ public:
     float noise_sum(glm::vec2 p)
     {
         float f = 0.0;
-        p = p * 2.f;
+        //p = p * 2.f;
         f += 1.0000 * PerlinNoise(p); 
-        p = p * 2.f;
-        f += 0.5000 * PerlinNoise(p); 
-        p = p * 2.f;
-        f += 0.2500 * PerlinNoise(p); 
-        p = p * 2.f;
-        f += 0.1250 * PerlinNoise(p); 
-        p = p * 2.f;
-        f += 0.0625 * PerlinNoise(p); 
-        p = p * 2.f;
+        //p = p * 2.f;
+        //f += 0.5000 * PerlinNoise(p); 
+        //p = p * 2.f;
+        //f += 0.2500 * PerlinNoise(p); 
+        //p = p * 2.f;
+        //f += 0.1250 * PerlinNoise(p); 
+        //p = p * 2.f;
+        //f += 0.0625 * PerlinNoise(p); 
         return f;
     }
 };
@@ -192,9 +159,9 @@ public:
 class Sky
 {
 private:
-    CubeGameObject Skybox;
+    SkyBoxObject Skybox;
 public:
-    Sky() : Skybox("res/texture/skybox", "res/shader/skybox.vert", "res/shader/skybox.frag", skybox , sizeof(skybox) , true)
+    Sky() : Skybox("res/texture/skybox", "res/shader/skybox.vert", "res/shader/skybox.frag")
     {
     }
     void SkyDraw(Camera& camera)

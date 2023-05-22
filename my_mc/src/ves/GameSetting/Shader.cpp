@@ -2,14 +2,14 @@
 
 #include "Shader.h"
 
-Shader::Shader(const std::string& filepath1 , const std::string& filepath2)
-{
-	v_FilePath = filepath1;
-	f_FilePath = filepath1;
-	m_RendererID = 0;
-	const ShaderProgramSource source = ParseShader(filepath1 , filepath2);
-	m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
-}
+//Shader::Shader(const std::string& filepath1 , const std::string& filepath2)
+//{
+//	v_FilePath = filepath1;
+//	f_FilePath = filepath1;
+//	m_RendererID = 0;
+//	const ShaderProgramSource source = ParseShader(filepath1 , filepath2);
+//	m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
+//}
 
 Shader::~Shader()
 {

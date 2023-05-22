@@ -6,19 +6,27 @@ void Camera::PositionMovement(float deltaTime, Camera_Movement direction)
 	float cameraSpeed = movementSpeed * deltaTime;
 	if (direction == FORWARD)
 	{
-		cameraPos += cameraFront * cameraSpeed;
+		cameraPos += -glm::normalize(glm::cross(cameraUp, glm::cross(cameraUp, cameraFront))) * cameraSpeed;
 	}
 	if (direction == BACKWARD)
 	{
-		cameraPos -= cameraFront * cameraSpeed;
+		cameraPos -= -glm::normalize(glm::cross(cameraUp , glm::cross(cameraUp, cameraFront))) * cameraSpeed;
 	}
 	if (direction == RIGHT)
 	{
-		cameraPos -= glm::cross(cameraUp, cameraFront) * cameraSpeed;
+		cameraPos -= glm::normalize(glm::cross(cameraUp, cameraFront)) * cameraSpeed;
 	}
 	if (direction == LEFT)
 	{
-		cameraPos += glm::cross(cameraUp, cameraFront) * cameraSpeed;
+		cameraPos += glm::normalize(glm::cross(cameraUp, cameraFront)) * cameraSpeed;
+	}
+	if (direction == DOWN)
+	{
+		cameraPos -= glm::vec3(0 , 1 , 0) * cameraSpeed;
+	}
+	if (direction == UP)
+	{
+		cameraPos += glm::vec3(0 , 1 , 0) * cameraSpeed;
 	}
 }	
 

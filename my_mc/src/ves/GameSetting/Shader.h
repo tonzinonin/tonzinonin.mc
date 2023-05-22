@@ -22,7 +22,16 @@ private:
 	unsigned int m_RendererID;
 	std::unordered_map<std::string, int> m_UniformLocationCache;
 public:
-	Shader(const std::string& filepath1 , const std::string& filepath2);
+	//Shader(){}
+	//Shader(const std::string& filepath1 , const std::string& filepath2);
+	void S_INIT(const std::string& filepath1, const std::string& filepath2)
+	{
+		v_FilePath = filepath1;
+		f_FilePath = filepath1;
+		m_RendererID = 0;
+		const ShaderProgramSource source = ParseShader(filepath1, filepath2);
+		m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
+	}
 	~Shader();
 
 	void Bind() const;

@@ -17,21 +17,19 @@
 #include "ves/GameSetting/VertexBufferLayout.h"
 
 #include "LandLoader.h"
+#include "UI.h"
 
-void processInput(GLFWwindow* window);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+Camera camera;
+
+#include "Player.h"
 
 #define SCREEN_WIDTH 1080
 #define SCREEN_HEIGHT 1080
+int IMGUI_WIDTH = 600;
+int IMGUI_HEIGHT = 300;
 
-float mixValue = 0.2;
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
-bool isMouse = false;
-
-Camera camera;
 
 int main()
 {
@@ -57,22 +55,20 @@ int main()
 		std::cout << "Error!" << std::endl;
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-	glfwSetKeyCallback(window, key_callback);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//GLCall(glEnable(GL_BLEND))
-	//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA))//开启混合
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST); 
+	//glDepthFunc(GL_LESS);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	Terrain terrain;
 	Sky sky;
+	Player player(window , camera , terrain);
+	OpenglImgui ui(window , camera);
 
 	while (!glfwWindowShouldClose(window))
 	{
-		processInput(window);
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_FRONT);
+		player.processInput(deltaTime);
 
 		float timeValue = glfwGetTime();
 		deltaTime = timeValue - lastFrame;
@@ -80,10 +76,11 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glDepthMask(GL_FALSE);
+		player.CheckCollider();
+		camera.cameraPosLastFrame = camera.cameraPos;
 		sky.SkyDraw(camera);
-		glDepthMask(GL_TRUE);
 		terrain.TerrainDraw(camera);
+		ui.Draw(IMGUI_WIDTH , IMGUI_HEIGHT);
 
 		glfwSwapBuffers(window);
 
@@ -95,50 +92,3 @@ int main()
 	return 0;
 }
 
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		glfwDestroyWindow(window);
-		glfwTerminate();
-	}
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		mixValue += 0.01;
-		if (mixValue >= 1.00) mixValue = 1.00;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		mixValue -= 0.01;
-		if (mixValue <= 0.00) mixValue = 0.00;
-	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.PositionMovement(deltaTime, FORWARD);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.PositionMovement(deltaTime, BACKWARD);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.PositionMovement(deltaTime, RIGHT);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.PositionMovement(deltaTime, LEFT);
-}
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) { camera.LookMovement(xpos, ypos); }
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) { camera.ScrollMovement(xoffset, yoffset); }
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_R && action == GLFW_RELEASE)
-	{
-		if (isMouse == false)
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			glfwSetCursorPosCallback(window, NULL);
-			isMouse = true;
-			std::cout << '!' << std::endl;
-		}
-		else
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			glfwSetCursorPosCallback(window, mouse_callback);
-			isMouse = false;
-			std::cout << '?' << std::endl;
-		}
-	}
-}
