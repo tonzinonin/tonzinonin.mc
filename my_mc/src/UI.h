@@ -6,14 +6,16 @@
 #include "thr/imgui/imgui_impl_opengl3.h"
 
 #include "ves/Camera.h"
+#include "Player.h"
 
 class OpenglImgui
 {
 private:
 	Camera& camera;
+	Player& player;
 public:
 
-	OpenglImgui(GLFWwindow* window , Camera& camera) : camera(camera)
+	OpenglImgui(GLFWwindow* window ,Camera& camera , Player& player) : camera(camera) , player(player)
 	{
 		ImGui::CreateContext();
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -35,6 +37,11 @@ public:
 			, camera.cameraPos.y - camera.cameraPosLastFrame.y, camera.cameraPos.z - camera.cameraPosLastFrame.z);
 		ImGui::SliderFloat("Float Slider", &camera.movementSpeed, 0.0f, 2.6f);
 	}
+	void ShowPlayerInformation()
+	{
+		ImGui::Text("Player collide_check:%s", player.Jump_check ? "True" : "False");
+		ImGui::Text("Player drop_speed:%.3f", player.DropSpeed);
+	}
 	void Draw(unsigned int IMGUI_WIDTH, unsigned int IMGUI_HEIGHT)
 	{
 		ImGui_ImplOpenGL3_NewFrame();
@@ -42,6 +49,7 @@ public:
 		ImGui::NewFrame();
 		{
 			ImGui::Begin("ImGui");
+			ShowPlayerInformation();
 			ShowPositionInformation();
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::Text("Press R to enable/unenable cursor in window");

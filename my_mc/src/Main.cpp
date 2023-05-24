@@ -16,11 +16,11 @@
 #include "ves/GameSetting/VertexBuffer.h"
 #include "ves/GameSetting/VertexBufferLayout.h"
 
-#include "LandLoader.h"
-#include "UI.h"
 
 Camera camera;
 
+#include "UI.h"
+#include "LandLoader.h"
 #include "Player.h"
 
 #define SCREEN_WIDTH 1080
@@ -62,7 +62,7 @@ int main()
 	Terrain terrain;
 	Sky sky;
 	Player player(window , camera , terrain);
-	OpenglImgui ui(window , camera);
+	OpenglImgui ui(window , camera, player);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -77,6 +77,7 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		player.Physics(deltaTime);
 		player.CheckCollider();
 		sky.SkyDraw(camera);
 		terrain.TerrainDraw(camera);

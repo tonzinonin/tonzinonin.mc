@@ -63,9 +63,9 @@ public:
         //BoxAxisStruct tmp;
         //tmp.GetAxis(0, 0, 0);
         //CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
-        for (int i = -10; i < 10; i += 1)
+        for (int i = -40; i < 40; i += 1)
         {
-            for (int j = -10; j < 10; j += 1)
+            for (int j = -40; j < 40; j += 1)
             {
                 float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
                 mi = std::min(mi, perlin);
