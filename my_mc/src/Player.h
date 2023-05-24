@@ -26,14 +26,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			glfwSetCursorPosCallback(window, NULL);
 			isMouse = true;
-			std::cout << '!' << std::endl;
 		}
 		else
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 			glfwSetCursorPosCallback(window, mouse_callback);
 			isMouse = false;
-			std::cout << '?' << std::endl;
 		}
 	}
 }
@@ -125,7 +123,7 @@ public:
 	float Collier_n_z = 0.5;
 
 	float DropSpeed = 0.f;
-	float gravity = 0.1f;
+	float gravity = 15.f;
 	float DROP_SPEED_MAX = 30.f;
 
 	bool Jump_check = false;
@@ -153,12 +151,12 @@ public:
 		if (Jump_check == false)
 		{
 			camera.cameraPos.y -= DropSpeed * deltaTime;
-			if (DropSpeed < DROP_SPEED_MAX) DropSpeed = DropSpeed + gravity;
+			if (DropSpeed < DROP_SPEED_MAX) DropSpeed = DropSpeed + gravity * deltaTime;
 		}
 		else
 		{
 			DropSpeed = 0.0;
-			camera.cameraPos.y -= DropSpeed;
+			camera.cameraPos.y -= DropSpeed * deltaTime;
 		}
 	}
 
@@ -267,12 +265,7 @@ public:
 			{
 				float z = it.BoxAxis.n_z - Collier_p_z;
 				float tmp = _equation(0, 0, 1, -z, fx, fy, fz);
-				if (min_dist > tmp
-					//&& fy < it.BoxAxis.p_y + Collier_p_y
-					//&& fy > it.BoxAxis.n_y - Collier_n_y
-					//&& fx < it.BoxAxis.p_x + Collier_p_x
-					//&& fx > it.BoxAxis.n_x - Collier_n_x
-					)
+				if (min_dist > tmp)
 				{
 					min_dist = tmp;
 					reset = camera.cameraPos;
@@ -285,12 +278,7 @@ public:
 			{
 				float z = it.BoxAxis.p_z + Collier_n_z;
 				float tmp = _equation(0, 0, 1, -z, fx, fy, fz);
-				if (min_dist > tmp
-					//&& fy < it.BoxAxis.p_y + Collier_p_y
-					//&& fy > it.BoxAxis.n_y - Collier_n_y
-					//&& fx < it.BoxAxis.p_x + Collier_p_x
-					//&& fx > it.BoxAxis.n_x - Collier_n_x
-					)
+				if (min_dist > tmp)
 				{
 					min_dist = tmp;
 					reset = camera.cameraPos;
@@ -303,12 +291,7 @@ public:
 			{
 				float y = it.BoxAxis.n_y - Collier_p_y;
 				float tmp = _equation(0, 1, 0, -y, fx, fy, fz);
-				if (min_dist > tmp
-					//&& fx < it.BoxAxis.p_x + Collier_p_x
-					//&& fx > it.BoxAxis.n_x - Collier_n_x
-					//&& fz < it.BoxAxis.p_z + Collier_p_z
-					//&& fz > it.BoxAxis.n_z - Collier_n_z
-					)
+				if (min_dist > tmp)
 				{
 					min_dist = tmp;
 					reset = camera.cameraPos;
@@ -321,12 +304,7 @@ public:
 			{
 				float y = it.BoxAxis.p_y + Collier_n_y;
 				float tmp = _equation(0, 1, 0, -y, fx, fy, fz);
-				if (min_dist > tmp
-					//&& fx < it.BoxAxis.p_x + Collier_p_x
-					//&& fx > it.BoxAxis.n_x - Collier_n_x
-					//&& fz < it.BoxAxis.p_z + Collier_p_z
-					//&& fz > it.BoxAxis.n_z - Collier_n_z
-					)
+				if (min_dist > tmp)
 				{
 					min_dist = tmp;
 					reset = camera.cameraPos;

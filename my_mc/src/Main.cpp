@@ -73,6 +73,7 @@ int main()
 
 		float timeValue = glfwGetTime();
 		deltaTime = timeValue - lastFrame;
+		//deltaTime *= 4;
 		lastFrame = timeValue;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

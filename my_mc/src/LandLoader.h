@@ -70,7 +70,7 @@ public:
                 float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
                 mi = std::min(mi, perlin);
                 ma = std::max(ma, perlin);
-                std::cout <<"noisevalue : "<< perlin << std::endl;
+                //std::cout <<"noisevalue : "<< perlin << std::endl;
                 int y = 0;
                 while(1)
                 {
@@ -105,7 +105,7 @@ public:
                 }
             }
         }
-        std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
+        //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
     void TerrainDraw(Camera& camera)
@@ -113,11 +113,22 @@ public:
         for (auto it : CubeInfo)
         {
             if (checkout[(int)it.location.x + 51][(int)it.location.y + 51][(int)it.location.z + 51] == 6) continue;
+            if (ViewOptimize(it.location)) continue;
             if (it.type == DIRT) dirt.DrawCube(camera, it.location);
             if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera , it.location);
         }
     }
 
+    bool ViewOptimize(glm::vec3 location)
+    {
+        glm::vec3 CubeVec = glm::normalize(location - camera.cameraPos);
+        float angle_cos = glm::dot(CubeVec, glm::normalize(camera.cameraFront));
+        if(angle_cos < glm::cos(glm::radians(camera.fov)))
+        {
+            return true;
+        }
+        return false;
+    }
     glm::vec2 hash22(glm::vec2 p)
     {
         p = glm::vec2(glm::dot(p, glm::vec2(127.1, 311.7)),
