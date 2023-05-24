@@ -30,7 +30,10 @@ public:
 		ImGui::Text("fabs(it.location.z - camera.cameraPos.z) = %.3f : 1", 0 - camera.cameraPos.z);
 		//ImGui::Text("camera.cameraPos.z - it.location.z = %.3f : 1", camera.cameraPos.z);
 		ImGui::Text("camera.cameraPos.x - Collier_n_x = %.3f : 0.5", camera.cameraPos.x - 0.5);
-
+		ImGui::Text("Pos: %.3f %.3f %.3f", camera.cameraPos.x, camera.cameraPos.y, camera.cameraPos.z);		
+		ImGui::Text("PosLastFrame -> Pos Vector: %.3f %.3f %.3f", camera.cameraPos.x - camera.cameraPosLastFrame.x
+			, camera.cameraPos.y - camera.cameraPosLastFrame.y, camera.cameraPos.z - camera.cameraPosLastFrame.z);
+		ImGui::SliderFloat("Float Slider", &camera.movementSpeed, 0.0f, 2.6f);
 	}
 	void Draw(unsigned int IMGUI_WIDTH, unsigned int IMGUI_HEIGHT)
 	{

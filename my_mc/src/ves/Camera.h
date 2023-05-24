@@ -20,10 +20,10 @@ public:
 	//camera position
 	float fov = 40.0f;
 	float sensitivity = 0.05;
-	float movementSpeed = 7.5f;
+	float movementSpeed = 6.5f;
 	bool firstMouse = true;
 
-	glm::vec3 cameraPos = glm::vec3(5.f, 0.f, 5.f);
+	glm::vec3 cameraPos = glm::vec3(5.f, 40.f, 5.f);
 	glm::vec3 cameraPosLastFrame = cameraPos;
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);

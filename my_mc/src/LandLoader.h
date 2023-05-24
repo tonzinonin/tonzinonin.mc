@@ -60,52 +60,52 @@ public:
     }
     void TerrainInit()
     {
-        BoxAxisStruct tmp;
-        tmp.GetAxis(0, 0, 0);
-        CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
-        //for (int i = -50; i < 50; i += 1)
-        //{
-        //    for (int j = -50; j < 50; j += 1)
-        //    {
-        //        float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
-        //        mi = std::min(mi, perlin);
-        //        ma = std::max(ma, perlin);
-        //        std::cout <<"noisevalue : "<< perlin << std::endl;
-        //        int y = 0;
-        //        while(1)
-        //        {
-        //            if (y > perlin * 10 + 10)
-        //            {
-        //                BoxAxisStruct tmp;
-        //                tmp.GetAxis(i, y, j);
-        //                CubeInfo.push_back({ glm::vec3(i , y , j) , GRASS_BLOCK , tmp});
-        //                
-        //                for (int k = 0; k < 6; k++)
-        //                {
-        //                    int lx = i + dx[k] + 51;
-        //                    int ly = y + dy[k] + 51;
-        //                    int lz = j + dz[k] + 51;
-        //                    checkout[lx][ly][lz]++;
-        //                }
-        //                break;
-        //            }         
+        //BoxAxisStruct tmp;
+        //tmp.GetAxis(0, 0, 0);
+        //CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
+        for (int i = -10; i < 10; i += 1)
+        {
+            for (int j = -10; j < 10; j += 1)
+            {
+                float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
+                mi = std::min(mi, perlin);
+                ma = std::max(ma, perlin);
+                std::cout <<"noisevalue : "<< perlin << std::endl;
+                int y = 0;
+                while(1)
+                {
+                    if (y > perlin * 10 + 10)
+                    {
+                        BoxAxisStruct tmp;
+                        tmp.GetAxis(i, y, j);
+                        CubeInfo.push_back({ glm::vec3(i , y , j) , GRASS_BLOCK , tmp});
+                        
+                        for (int k = 0; k < 6; k++)
+                        {
+                            int lx = i + dx[k] + 51;
+                            int ly = y + dy[k] + 51;
+                            int lz = j + dz[k] + 51;
+                            checkout[lx][ly][lz]++;
+                        }
+                        break;
+                    }         
 
-        //            BoxAxisStruct tmp;
-        //            tmp.GetAxis(i, y, j);
-        //            CubeInfo.push_back({ glm::vec3(i , y , j) , DIRT , tmp});
+                    BoxAxisStruct tmp;
+                    tmp.GetAxis(i, y, j);
+                    CubeInfo.push_back({ glm::vec3(i , y , j) , DIRT , tmp});
 
-        //            for (int k = 0; k < 6; k++)
-        //            {
-        //                int lx = i + dx[k] + 51;
-        //                int ly = y + dy[k] + 51;
-        //                int lz = j + dz[k] + 51;
-        //                checkout[lx][ly][lz]++;
-        //            }
-        //            y += 1;
-        //        }
-        //    }
-        //}
-        //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
+                    for (int k = 0; k < 6; k++)
+                    {
+                        int lx = i + dx[k] + 51;
+                        int ly = y + dy[k] + 51;
+                        int lz = j + dz[k] + 51;
+                        checkout[lx][ly][lz]++;
+                    }
+                    y += 1;
+                }
+            }
+        }
+        std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
     void TerrainDraw(Camera& camera)

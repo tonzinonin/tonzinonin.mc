@@ -68,6 +68,7 @@ int main()
 	{
 		//glEnable(GL_CULL_FACE);
 		//glCullFace(GL_FRONT);
+		camera.cameraPosLastFrame = camera.cameraPos;
 		player.processInput(deltaTime);
 
 		float timeValue = glfwGetTime();
@@ -77,10 +78,9 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		player.CheckCollider();
-		camera.cameraPosLastFrame = camera.cameraPos;
 		sky.SkyDraw(camera);
 		terrain.TerrainDraw(camera);
-		ui.Draw(IMGUI_WIDTH , IMGUI_HEIGHT);
+		ui.Draw(IMGUI_WIDTH, IMGUI_HEIGHT);
 
 		glfwSwapBuffers(window);
 
