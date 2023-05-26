@@ -7,15 +7,17 @@
 
 #include "ves/Camera.h"
 #include "Player.h"
+#include "LandLoader.h"
 
 class OpenglImgui
 {
 private:
 	Camera& camera;
 	Player& player;
+	Terrain& land;
 public:
 
-	OpenglImgui(GLFWwindow* window ,Camera& camera , Player& player) : camera(camera) , player(player)
+	OpenglImgui(GLFWwindow* window ,Camera& camera , Player& player , Terrain& land) : camera(camera) , player(player) , land(land)
 	{
 		ImGui::CreateContext();
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -41,6 +43,13 @@ public:
 	{
 		ImGui::Text("Player collide_check:%s", player.Jump_check ? "True" : "False");
 		ImGui::Text("Player drop_speed:%.3f", player.DropSpeed);
+		ImGui::Text("Player IsCubePlace:%s", CubePlaceActive ? "True" : "False");
+
+	}
+	void showLandInformation()
+	{
+		ImGui::Text("CubeInViewCount:%d", land.VisbleCubeInfo.size());
+		ImGui::Text("CubeCount:%d", land.CubeInfo.size());
 	}
 	void Draw(unsigned int IMGUI_WIDTH, unsigned int IMGUI_HEIGHT)
 	{
@@ -49,6 +58,7 @@ public:
 		ImGui::NewFrame();
 		{
 			ImGui::Begin("ImGui");
+			showLandInformation();
 			ShowPlayerInformation();
 			ShowPositionInformation();
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

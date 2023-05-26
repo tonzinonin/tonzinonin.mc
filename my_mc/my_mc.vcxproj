@@ -28,14 +28,18 @@
     <ClCompile Include="src\thr\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\thr\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\thr\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\tmp.cpp" />
     <ClCompile Include="src\ves\Camera.cpp" />
+    <ClCompile Include="src\ves\GameSetting\IndexBuffer.cpp" />
     <ClCompile Include="src\ves\GameSetting\Shader.cpp" />
     <ClCompile Include="src\ves\GameSetting\VertexArray.cpp" />
     <ClCompile Include="src\ves\GameSetting\VertexBuffer.cpp" />
+    <ClCompile Include="src\ves\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\Texture\stb_image.h" />
     <ClInclude Include="src\CubeGameObject.h" />
+    <ClInclude Include="src\Cursor.h" />
     <ClInclude Include="src\LandLoader.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\thr\imgui\imconfig.h" />
@@ -50,15 +54,19 @@
     <ClInclude Include="src\thr\stb_image\stb_image.h" />
     <ClInclude Include="src\UI.h" />
     <ClInclude Include="src\ves\Camera.h" />
+    <ClInclude Include="src\ves\GameSetting\IndexBuffer.h" />
     <ClInclude Include="src\ves\GameSetting\Shader.h" />
     <ClInclude Include="src\ves\GameSetting\VertexArray.h" />
     <ClInclude Include="src\ves\GameSetting\VertexBuffer.h" />
     <ClInclude Include="src\ves\GameSetting\VertexBufferLayout.h" />
     <ClInclude Include="src\ves\ReadVertex.h" />
+    <ClInclude Include="src\ves\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\basic.frag" />
     <None Include="res\shader\basic.vert" />
+    <None Include="res\shader\cursor.frag" />
+    <None Include="res\shader\cursor.vert" />
     <None Include="res\shader\skybox.frag" />
     <None Include="res\shader\skybox.vert" />
   </ItemGroup>
@@ -85,6 +93,8 @@
     <Image Include="res\texture\terrian\grass_block\left.png" />
     <Image Include="res\texture\terrian\grass_block\right.png" />
     <Image Include="res\texture\terrian\grass_block\top.png" />
+    <Image Include="res\texture\UI\crosshair_alpha_1.png" />
+    <Image Include="res\texture\UI\R.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

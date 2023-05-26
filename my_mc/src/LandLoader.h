@@ -52,6 +52,7 @@ private:
 public:
 
     std::vector<CubeStruct> CubeInfo;
+    std::vector<CubeStruct> VisbleCubeInfo;
 
 	Terrain() : grass_block("res/texture/terrian/grass_block", "res/shader/basic.vert", "res/shader/basic.frag"),
                 dirt("res/texture/terrian/dirt", "res/shader/basic.vert", "res/shader/basic.frag")
@@ -63,9 +64,9 @@ public:
         //BoxAxisStruct tmp;
         //tmp.GetAxis(0, 0, 0);
         //CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
-        for (int i = -40; i < 40; i += 1)
+        for (int i = -10; i < 10; i += 1)
         {
-            for (int j = -40; j < 40; j += 1)
+            for (int j = -10; j < 10; j += 1)
             {
                 float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
                 mi = std::min(mi, perlin);
@@ -78,42 +79,49 @@ public:
                     {
                         BoxAxisStruct tmp;
                         tmp.GetAxis(i, y, j);
-                        CubeInfo.push_back({ glm::vec3(i , y , j) , GRASS_BLOCK , tmp});
-                        
-                        for (int k = 0; k < 6; k++)
-                        {
-                            int lx = i + dx[k] + 51;
-                            int ly = y + dy[k] + 51;
-                            int lz = j + dz[k] + 51;
-                            checkout[lx][ly][lz]++;
-                        }
+                        CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , GRASS_BLOCK , tmp});
+
+                        checkout[i + 11][y + 11][j + 11]++;
+                        //for (int k = 0; k < 6; k++)
+                        //{
+                        //    int lx = i + dx[k] + 51;
+                        //    int ly = y + dy[k] + 51;
+                        //    int lz = j + dz[k] + 51;
+                        //    checkout[lx][ly][lz]++;
+                        //}
                         break;
                     }         
 
                     BoxAxisStruct tmp;
                     tmp.GetAxis(i, y, j);
-                    CubeInfo.push_back({ glm::vec3(i , y , j) , DIRT , tmp});
+                    CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , DIRT , tmp});
 
-                    for (int k = 0; k < 6; k++)
-                    {
-                        int lx = i + dx[k] + 51;
-                        int ly = y + dy[k] + 51;
-                        int lz = j + dz[k] + 51;
-                        checkout[lx][ly][lz]++;
-                    }
+                    checkout[i + 11][y + 11][j + 11]++;
+                    //for (int k = 0; k < 6; k++)
+                    //{
+                    //    int lx = i + dx[k] + 51;
+                    //    int ly = y + dy[k] + 51;
+                    //    int lz = j + dz[k] + 51;
+                    //    checkout[lx][ly][lz]++;
+                    //}
                     y += 1;
                 }
             }
         }
-        //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
+        std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
     void TerrainDraw(Camera& camera)
     {
+        VisbleCubeInfo.clear();
         for (auto it : CubeInfo)
         {
-            if (checkout[(int)it.location.x + 51][(int)it.location.y + 51][(int)it.location.z + 51] == 6) continue;
+            //if (checkout[(int)it.location.x + 51][(int)it.location.y + 51][(int)it.location.z + 51] == 6) continue;
             if (ViewOptimize(it.location)) continue;
+            else
+            {
+                VisbleCubeInfo.push_back(it);
+            }
             if (it.type == DIRT) dirt.DrawCube(camera, it.location);
             if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera , it.location);
         }
@@ -121,9 +129,12 @@ public:
 
     bool ViewOptimize(glm::vec3 location)
     {
+        //float dist = glm::distance(location, camera.cameraPos);
         glm::vec3 CubeVec = glm::normalize(location - camera.cameraPos);
         float angle_cos = glm::dot(CubeVec, glm::normalize(camera.cameraFront));
+        //float angle_cos = CubeVec.x * camera.cameraFront.x + CubeVec.y * camera.cameraFront.y + CubeVec.z * camera.cameraFront.z;
         if(angle_cos < glm::cos(glm::radians(camera.fov)))
+        //if (angle_cos < 0.766)
         {
             return true;
         }

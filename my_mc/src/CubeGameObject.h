@@ -147,12 +147,14 @@ public:
 		if (isSky == true) return;
 		vb.VB_INIT(positions, sizeof(positions));
 		cubemapTexture = LoadCubeTexture(faces, GL_RGBA);
+		std::cout << "cubemapTexture:" << cubemapTexture << std::endl;
 		LoadBuffer();
 	}
 	void DrawCube(Camera& camera , glm::vec3 translation)
 	{
 		shader.Bind();
 		va.Bind();
+
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, translation); 
 		//model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	
@@ -164,18 +166,24 @@ public:
 
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		shader.Unbind();
+		va.Unbind();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 	unsigned int LoadCubeTexture(std::vector<std::string> faces , GLint Renderer_type)
 	{
 		unsigned int textureID;
 		glGenTextures(1, &textureID);
+
 		glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
 		int width, height, nrChannels;
 		unsigned char* data;
+		stbi_set_flip_vertically_on_load(0);
 		for (unsigned int i = 0; i < faces.size(); i++)
 		{
-			data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0); 
+			data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
 			if (data)
 			{
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, Renderer_type , width, height, 0, Renderer_type , GL_UNSIGNED_BYTE, data);
@@ -187,12 +195,13 @@ public:
 				stbi_image_free(data);
 			}
 		}
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		return textureID;
 	}
 };
@@ -219,6 +228,7 @@ public:
 		glDepthMask(GL_FALSE);
 		shader.Bind();
 		va.Bind();
+
 		glm::mat4 projection = glm::perspective(glm::radians(camera.fov), float(SCREEN_WIDTH) / float(SCREEN_HEIGHT), 0.1f, 100.0f);
 		glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetRendererID(), "view"), 1, GL_FALSE, &view[0][0]);
@@ -227,5 +237,6 @@ public:
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glDepthMask(GL_TRUE);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 };

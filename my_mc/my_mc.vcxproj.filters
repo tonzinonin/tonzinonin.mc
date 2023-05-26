@@ -54,6 +54,15 @@
     <ClCompile Include="src\thr\imgui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ves\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ves\GameSetting\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tmp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ves\Camera.h">
@@ -119,12 +128,23 @@
     <ClInclude Include="src\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ves\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ves\GameSetting\IndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\basic.vert" />
     <None Include="res\shader\basic.frag" />
     <None Include="res\shader\skybox.vert" />
     <None Include="res\shader\skybox.frag" />
+    <None Include="res\shader\cursor.frag" />
+    <None Include="res\shader\cursor.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\vertex\cube.txt" />
@@ -185,6 +205,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\texture\skybox\top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\texture\UI\crosshair_alpha_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\texture\UI\R.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

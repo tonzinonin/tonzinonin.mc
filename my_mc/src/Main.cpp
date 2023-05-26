@@ -15,13 +15,15 @@
 #include "ves/GameSetting/VertexArray.h"
 #include "ves/GameSetting/VertexBuffer.h"
 #include "ves/GameSetting/VertexBufferLayout.h"
-
+#include "ves/GameSetting/IndexBuffer.h"
+#include "ves/Texture.h"
 
 Camera camera;
 
 #include "UI.h"
 #include "LandLoader.h"
 #include "Player.h"
+#include "Cursor.h"
 
 #define SCREEN_WIDTH 1080
 #define SCREEN_HEIGHT 1080
@@ -30,6 +32,18 @@ int IMGUI_HEIGHT = 300;
 
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
+
+std::string ParseShader(const std::string& filepath)
+{
+	std::ifstream stream(filepath);
+	std::string line;
+	std::stringstream ss;
+	while (getline(stream, line))
+	{
+		ss << line << '\n';
+	}
+	return ss.str();
+}
 
 int main()
 {
@@ -55,14 +69,18 @@ int main()
 		std::cout << "Error!" << std::endl;
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	glEnable(GL_DEPTH_TEST); 
-	//glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	//glDepthFunc(GL_ALWAYS);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	Terrain terrain;
-	Sky sky;
-	Player player(window , camera , terrain);
-	OpenglImgui ui(window , camera, player);
+
+		Cursor cursor;
+		Terrain terrain;
+		Sky sky;
+		Player player(window, camera, terrain);
+		OpenglImgui ui(window, camera, player, terrain);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -73,23 +91,27 @@ int main()
 
 		float timeValue = glfwGetTime();
 		deltaTime = timeValue - lastFrame;
-		//deltaTime *= 4;
 		lastFrame = timeValue;
 
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		player.Physics(deltaTime);
 		player.CheckCollider();
+
+		cursor.Draw();
 		sky.SkyDraw(camera);
 		terrain.TerrainDraw(camera);
 		ui.Draw(IMGUI_WIDTH, IMGUI_HEIGHT);
 
 		glfwSwapBuffers(window);
 
+		CubePlaceActive = false;
 		glfwPollEvents();
 	}
 
-	glfwDestroyWindow(window);
+		glfwDestroyWindow(window);
+	
 	glfwTerminate();
 	return 0;
 }
