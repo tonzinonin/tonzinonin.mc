@@ -118,10 +118,10 @@ public:
         {
             //if (checkout[(int)it.location.x + 51][(int)it.location.y + 51][(int)it.location.z + 51] == 6) continue;
             if (ViewOptimize(it.location)) continue;
-            else
-            {
-                VisbleCubeInfo.push_back(it);
-            }
+            //else
+            //{
+            //    VisbleCubeInfo.push_back(it);
+            //}
             if (it.type == DIRT) dirt.DrawCube(camera, it.location);
             if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera , it.location);
         }
@@ -129,11 +129,15 @@ public:
 
     bool ViewOptimize(glm::vec3 location)
     {
-        //float dist = glm::distance(location, camera.cameraPos);
+        float dist = 
+              (location.x - camera.cameraPos.x) * (location.x - camera.cameraPos.x)
+            + (location.y - camera.cameraPos.y) * (location.y - camera.cameraPos.y)
+            + (location.z - camera.cameraPos.z) * (location.z - camera.cameraPos.z);
         glm::vec3 CubeVec = glm::normalize(location - camera.cameraPos);
         float angle_cos = glm::dot(CubeVec, glm::normalize(camera.cameraFront));
         //float angle_cos = CubeVec.x * camera.cameraFront.x + CubeVec.y * camera.cameraFront.y + CubeVec.z * camera.cameraFront.z;
-        if(angle_cos < glm::cos(glm::radians(camera.fov)))
+        if (dist < 4.) return false;
+        if((angle_cos < glm::cos(glm::radians(camera.fov)) || dist > 400.))
         //if (angle_cos < 0.766)
         {
             return true;

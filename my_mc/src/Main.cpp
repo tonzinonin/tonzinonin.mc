@@ -106,7 +106,8 @@ int main()
 
 		glfwSwapBuffers(window);
 
-		CubePlaceActive = false;
+		CubePlaceActive = false; 
+		CubeDestroyActive = false;
 		glfwPollEvents();
 	}
 

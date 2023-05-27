@@ -37,35 +37,48 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 bool isPlace = false;
+bool isDestroy = false;
 bool CubePlaceActive = false;
+bool CubeDestroyActive = false;
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && isPlace == false)
+	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && isPlace == false)
 	{
 		CubePlaceActive = true;
 		isPlace = true;
 	}
-	if (isPlace == true && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	if (isPlace == true && button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
 	{
 		isPlace = false;
 	}
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && isPlace == false)
+	{
+		CubeDestroyActive = true;
+		isDestroy = true;
+	}
+	if (isPlace == true && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+	{
+		isDestroy = false;
+	}
 }
 
-enum face_check
-{
-	FC_UP, FC_DOWN, FC_LEFT, FC_RIGHT, FC_FORWARD, FC_BACK, NONE
-};
 class Player
 {
 private:
 
+	enum Ray_mode
+	{
+		DESTROY, GENERATE
+	};
+	enum face_check
+	{
+		FC_UP, FC_DOWN, FC_LEFT, FC_RIGHT, FC_FORWARD, FC_BACK, NONE
+	};
 	GLFWwindow*& window;
 	Camera& camera;
 	Terrain& terrain;
-
-	
-
+		
 public:
 
 	float Collier_p_x = 0.5;
@@ -100,7 +113,8 @@ public:
 	{
 		DropCheck(deltaTime);
 		if (isJump) JumpCheck(deltaTime);
-		if (CubePlaceActive) PlaceCube();
+		if (CubePlaceActive) RayCheckCube(GENERATE);
+		if (CubeDestroyActive) RayCheckCube(DESTROY);
 	}
 
 	void DropCheck(float deltaTime)
@@ -192,73 +206,73 @@ public:
 		return dist;
 	}
 
-	void PlaceCube()
+	void RayCheckCube(Ray_mode raymode)
 	{
-		std::cout << "PlaceCube" << std::endl;
 		float dist_r = 0x3f3f3f3f;
 		CubeStruct cubestruct_r;
+		std::vector<CubeStruct>::iterator cubePosition;
 		face_check face_r = NONE;
 
-		for (auto it : terrain.VisbleCubeInfo)
+		for (auto it = terrain.CubeInfo.begin() ; it != terrain.CubeInfo.end() ; it++)
 		{
 			float dist = dist_r;
 			face_check face = NONE;
 			float x, y, z;
-			float tmp = r_equation(1, 0, 0, -it.BoxAxis.n_x, x, y, z);//n
-			if (y < it.BoxAxis.p_y
-				&& y > it.BoxAxis.n_y
-				&& z < it.BoxAxis.p_z
-				&& z > it.BoxAxis.n_z
+			float tmp = r_equation(1, 0, 0, -it -> BoxAxis.n_x, x, y, z);//n
+			if (y < it -> BoxAxis.p_y
+				&& y > it -> BoxAxis.n_y
+				&& z < it -> BoxAxis.p_z
+				&& z > it -> BoxAxis.n_z
 				&& tmp < dist)
 			{
 				face = FC_LEFT;
 				dist = tmp;
 			}
-			tmp = r_equation(1, 0, 0, -it.BoxAxis.p_x, x, y, z);//p
-			if (y < it.BoxAxis.p_y
-				&& y > it.BoxAxis.n_y
-				&& z < it.BoxAxis.p_z
-				&& z > it.BoxAxis.n_z
+			tmp = r_equation(1, 0, 0, -it -> BoxAxis.p_x, x, y, z);//p
+			if (y < it -> BoxAxis.p_y
+				&& y > it -> BoxAxis.n_y
+				&& z < it -> BoxAxis.p_z
+				&& z > it -> BoxAxis.n_z
 				&& tmp < dist)
 			{
 				face = FC_RIGHT;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 1, 0, -it.BoxAxis.n_y, x, y, z);
-			if (x < it.BoxAxis.p_x
-				&& x > it.BoxAxis.n_x
-				&& z < it.BoxAxis.p_z
-				&& z > it.BoxAxis.n_z
+			tmp = r_equation(0, 1, 0, -it -> BoxAxis.n_y, x, y, z);
+			if (x < it -> BoxAxis.p_x
+				&& x > it -> BoxAxis.n_x
+				&& z < it -> BoxAxis.p_z
+				&& z > it -> BoxAxis.n_z
 				&& tmp < dist)
 			{
 				face = FC_UP;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 1, 0, -it.BoxAxis.p_y, x, y, z);
-			if (x < it.BoxAxis.p_x
-				&& x > it.BoxAxis.n_x
-				&& z < it.BoxAxis.p_z
-				&& z > it.BoxAxis.n_z
+			tmp = r_equation(0, 1, 0, -it -> BoxAxis.p_y, x, y, z);
+			if (x < it -> BoxAxis.p_x
+				&& x > it -> BoxAxis.n_x
+				&& z < it -> BoxAxis.p_z
+				&& z > it -> BoxAxis.n_z
 				&& tmp < dist)
 			{
 				face = FC_DOWN;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 0, 1, -it.BoxAxis.n_z, x, y, z);
-			if (y < it.BoxAxis.p_y
-				&& y > it.BoxAxis.n_y
-				&& x < it.BoxAxis.p_x
-				&& x > it.BoxAxis.n_x
+			tmp = r_equation(0, 0, 1, -it -> BoxAxis.n_z, x, y, z);
+			if (y < it -> BoxAxis.p_y
+				&& y > it -> BoxAxis.n_y
+				&& x < it -> BoxAxis.p_x
+				&& x > it -> BoxAxis.n_x
 				&& tmp < dist)
 			{
 				face = FC_FORWARD;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 0, 1, -it.BoxAxis.p_z, x, y, z);
-			if (y < it.BoxAxis.p_y
-				&& y > it.BoxAxis.n_y
-				&& x < it.BoxAxis.p_x
-				&& x > it.BoxAxis.n_x
+			tmp = r_equation(0, 0, 1, -it -> BoxAxis.p_z, x, y, z);
+			if (y < it -> BoxAxis.p_y
+				&& y > it -> BoxAxis.n_y
+				&& x < it -> BoxAxis.p_x
+				&& x > it -> BoxAxis.n_x
 				&& tmp < dist)
 			{
 				face = FC_BACK;
@@ -270,11 +284,38 @@ public:
 			{
 				dist_r = dist;
 				face_r = face;
-				cubestruct_r = it;
+				cubestruct_r = *it;
+				cubePosition = it;
 			}
 		}
 
-		if (dist_r == 0x3f3f3f3f) return;
+		if (face_r == NONE) return;
+
+		else switch (raymode)
+		{
+		case (DESTROY):
+		{
+			std::cout << "destory!" << std::endl;
+			DestroyCube(cubePosition);
+			break;
+		}
+		case (GENERATE):
+		{
+			std::cout << "place!" << std::endl;
+			PlaceCube(face_r, cubestruct_r);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	void DestroyCube(std::vector<CubeStruct>::iterator it)
+	{
+		checkout[(int)(it->location.x) + 11][(int)(it->location.y) + 11][(int)(it->location.z) + 11]--;
+		terrain.CubeInfo.erase(it);
+	}
+	void PlaceCube(face_check& face_r , CubeStruct cubestruct_r)
+	{
 		switch (face_r)
 		{
 		case(NONE):break;
