@@ -137,6 +137,9 @@
     <ClInclude Include="src\ves\GameSetting\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ShortcutBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\basic.vert" />
@@ -145,6 +148,10 @@
     <None Include="res\shader\skybox.frag" />
     <None Include="res\shader\cursor.frag" />
     <None Include="res\shader\cursor.vert" />
+    <None Include="res\shader\UI.vert" />
+    <None Include="res\shader\UI.frag" />
+    <None Include="res\shader\barBoxFrame.frag" />
+    <None Include="res\shader\barBoxFrame.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\vertex\cube.txt" />
@@ -211,6 +218,18 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\texture\UI\R.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\texture\UI\pack.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\texture\UI\shortcut.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\texture\UI\bar2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\texture\UI\squareframe.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

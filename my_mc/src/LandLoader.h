@@ -16,8 +16,18 @@ float ma = -0x3f3f;
 
 enum CubeType
 {
-    GRASS_BLOCK, DIRT, SKYBOX
+    GRASS_BLOCK,
+    DIRT, 
+    DIAMOND ,
+    OAK_LOG ,
+    OAK_PLANKS ,
+    SANDSTONE ,
+    STONE,
+    TNT ,
+    WHITE_WOOL ,
+    SKYBOX
 };
+
 struct BoxAxisStruct
 {
     float p_x, p_y, p_z;
@@ -41,21 +51,34 @@ struct CubeStruct
     BoxAxisStruct BoxAxis;
 };
 
-
 class Terrain
 {
 private:
 
 	CubeGameObject grass_block;
     CubeGameObject dirt;
+    CubeGameObject diamond;
+    CubeGameObject oak_log;
+    CubeGameObject oak_planks;
+    CubeGameObject sandstone;
+    CubeGameObject stone;
+    CubeGameObject tnt;
+    CubeGameObject white_wool;
 
 public:
 
     std::vector<CubeStruct> CubeInfo;
     std::vector<CubeStruct> VisbleCubeInfo;
 
-	Terrain() : grass_block("res/texture/terrian/grass_block", "res/shader/basic.vert", "res/shader/basic.frag"),
-                dirt("res/texture/terrian/dirt", "res/shader/basic.vert", "res/shader/basic.frag")
+	Terrain() : grass_block("res/texture/terrian/grass_block", "res/shader/basic.vert", "res/shader/basic.frag",GL_RGBA),
+                dirt("res/texture/terrian/dirt", "res/shader/basic.vert", "res/shader/basic.frag",GL_RGBA),
+                diamond("res/texture/terrian/diamond", "res/shader/basic.vert", "res/shader/basic.frag",GL_RGB),
+                oak_log("res/texture/terrian/oak_log", "res/shader/basic.vert", "res/shader/basic.frag",GL_RGB),
+                oak_planks("res/texture/terrian/oak_planks", "res/shader/basic.vert", "res/shader/basic.frag",GL_RGB),
+                sandstone("res/texture/terrian/sandstone", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
+                stone("res/texture/terrian/stone", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
+                tnt("res/texture/terrian/tnt", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
+                white_wool("res/texture/terrian/white_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB)
     {
         TerrainInit();
     }
@@ -82,13 +105,6 @@ public:
                         CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , GRASS_BLOCK , tmp});
 
                         checkout[i + 11][y + 11][j + 11]++;
-                        //for (int k = 0; k < 6; k++)
-                        //{
-                        //    int lx = i + dx[k] + 51;
-                        //    int ly = y + dy[k] + 51;
-                        //    int lz = j + dz[k] + 51;
-                        //    checkout[lx][ly][lz]++;
-                        //}
                         break;
                     }         
 
@@ -97,18 +113,11 @@ public:
                     CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , DIRT , tmp});
 
                     checkout[i + 11][y + 11][j + 11]++;
-                    //for (int k = 0; k < 6; k++)
-                    //{
-                    //    int lx = i + dx[k] + 51;
-                    //    int ly = y + dy[k] + 51;
-                    //    int lz = j + dz[k] + 51;
-                    //    checkout[lx][ly][lz]++;
-                    //}
                     y += 1;
                 }
             }
         }
-        std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
+        //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
     void TerrainDraw(Camera& camera)
@@ -122,8 +131,16 @@ public:
             //{
             //    VisbleCubeInfo.push_back(it);
             //}
+            if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera, it.location);
             if (it.type == DIRT) dirt.DrawCube(camera, it.location);
-            if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera , it.location);
+            if (it.type == DIAMOND) diamond.DrawCube(camera, it.location);
+            if (it.type == OAK_LOG) oak_log.DrawCube(camera, it.location);
+            if (it.type == OAK_PLANKS) oak_planks.DrawCube(camera, it.location);
+            if (it.type == SANDSTONE) sandstone.DrawCube(camera, it.location);
+            if (it.type == STONE) stone.DrawCube(camera, it.location);
+            if (it.type == TNT) tnt.DrawCube(camera, it.location);
+            if (it.type == WHITE_WOOL) white_wool.DrawCube(camera, it.location);
+
         }
     }
 

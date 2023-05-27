@@ -137,16 +137,16 @@ protected:
 
 	std::vector<std::string> faces;
 public:
-	CubeGameObject(std::string filepath, std::string shaderfilepath1, std::string shaderfilepath2, bool isSky = false)
+	CubeGameObject(std::string filepath, std::string shaderfilepath1, std::string shaderfilepath2, GLint renderermode , bool isSky = false)
 	{
 		shader.S_INIT(shaderfilepath1, shaderfilepath2);
 		for (int i = 0; i < 6; i++)
 		{
 			faces.push_back(filepath + face[i]);
 		}
+		cubemapTexture = LoadCubeTexture(faces, renderermode);
 		if (isSky == true) return;
 		vb.VB_INIT(positions, sizeof(positions));
-		cubemapTexture = LoadCubeTexture(faces, GL_RGBA);
 		std::cout << "cubemapTexture:" << cubemapTexture << std::endl;
 		LoadBuffer();
 	}
@@ -217,10 +217,9 @@ private:
 public:
 
 	SkyBoxObject(std::string filepath, std::string shaderfilepath1, std::string shaderfilepath2)
-		: CubeGameObject(filepath, shaderfilepath1, shaderfilepath2, true)
+		: CubeGameObject(filepath, shaderfilepath1, shaderfilepath2, GL_RGB , true)
 	{
 		vb.VB_INIT(skybox, sizeof(skybox));
-		cubemapTexture = LoadCubeTexture(faces, GL_RGB);
 		LoadSkyBuffer();
 	}
 	void DrawSkyBox(Camera& camera)

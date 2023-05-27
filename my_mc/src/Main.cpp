@@ -24,6 +24,7 @@ Camera camera;
 #include "LandLoader.h"
 #include "Player.h"
 #include "Cursor.h"
+#include "ShortcutBar.h"
 
 #define SCREEN_WIDTH 1080
 #define SCREEN_HEIGHT 1080
@@ -75,12 +76,12 @@ int main()
 	//glDepthFunc(GL_ALWAYS);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-
-		Cursor cursor;
-		Terrain terrain;
-		Sky sky;
-		Player player(window, camera, terrain);
-		OpenglImgui ui(window, camera, player, terrain);
+	ShortcutBar bar;
+	Cursor cursor;
+	Terrain terrain;
+	Sky sky;
+	Player player(window, camera, terrain);
+	OpenglImgui ui(window, camera, player, terrain);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -99,6 +100,7 @@ int main()
 		player.Physics(deltaTime);
 		player.CheckCollider();
 
+		bar.Draw();
 		cursor.Draw();
 		sky.SkyDraw(camera);
 		terrain.TerrainDraw(camera);

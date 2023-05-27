@@ -42,6 +42,7 @@
     <ClInclude Include="src\Cursor.h" />
     <ClInclude Include="src\LandLoader.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\ShortcutBar.h" />
     <ClInclude Include="src\thr\imgui\imconfig.h" />
     <ClInclude Include="src\thr\imgui\imgui.h" />
     <ClInclude Include="src\thr\imgui\imgui_impl_glfw.h" />
@@ -63,12 +64,16 @@
     <ClInclude Include="src\ves\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shader\barBoxFrame.frag" />
+    <None Include="res\shader\barBoxFrame.vert" />
     <None Include="res\shader\basic.frag" />
     <None Include="res\shader\basic.vert" />
     <None Include="res\shader\cursor.frag" />
     <None Include="res\shader\cursor.vert" />
     <None Include="res\shader\skybox.frag" />
     <None Include="res\shader\skybox.vert" />
+    <None Include="res\shader\UI.frag" />
+    <None Include="res\shader\UI.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\vertex\cube.txt" />
@@ -93,8 +98,12 @@
     <Image Include="res\texture\terrian\grass_block\left.png" />
     <Image Include="res\texture\terrian\grass_block\right.png" />
     <Image Include="res\texture\terrian\grass_block\top.png" />
+    <Image Include="res\texture\UI\bar2.png" />
     <Image Include="res\texture\UI\crosshair_alpha_1.png" />
+    <Image Include="res\texture\UI\pack.png" />
     <Image Include="res\texture\UI\R.png" />
+    <Image Include="res\texture\UI\shortcut.png" />
+    <Image Include="res\texture\UI\squareframe.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -4,8 +4,10 @@
 #include "GL/glew.h"
 #include "LandLoader.h"
 #include <cmath>
-const int inf = 1e-5;
+
 bool isMouse = false;
+
+int stuffIndex = 0;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -14,7 +16,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ScrollMovement(xoffset, yoffset);
+	//camera.ScrollMovement(xoffset, yoffset);
+	stuffIndex += yoffset;
+	if (stuffIndex < -4) stuffIndex = -4;
+	if (stuffIndex > 4) stuffIndex = 4;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -98,6 +103,8 @@ public:
 
 	float CubeStride = 1.0f;
 
+	CubeType cubeList[9];
+
 	Player(GLFWwindow*& window, Camera& camera, Terrain& terrain)
 		: window(window),
 		camera(camera),
@@ -107,6 +114,17 @@ public:
 		glfwSetScrollCallback(window, scroll_callback);
 		glfwSetKeyCallback(window, key_callback);
 		glfwSetMouseButtonCallback(window, mouseButtonCallback);
+
+		cubeList[0] = GRASS_BLOCK;
+		cubeList[1] = DIRT;
+		cubeList[2] = DIAMOND;
+		cubeList[3] = OAK_LOG;
+		cubeList[4] = OAK_PLANKS;
+		cubeList[5] = SANDSTONE;
+		cubeList[6] = STONE;
+		cubeList[7] = TNT;
+		cubeList[8] = WHITE_WOOL;
+
 	}
 
 	void Physics(float& deltaTime)
@@ -316,6 +334,20 @@ public:
 	}
 	void PlaceCube(face_check& face_r , CubeStruct cubestruct_r)
 	{
+		std::cout << stuffIndex << std::endl;
+		CubeType type;
+		switch (stuffIndex)
+		{
+		case -4: type = cubeList[0]; std::cout << -4 << std::endl; break;
+		case -3: type = cubeList[1]; std::cout << -3 << std::endl; break;
+		case -2: type = cubeList[2]; std::cout << -2 << std::endl; break;
+		case -1: type = cubeList[3]; std::cout << -1 << std::endl; break;
+		case 0: type = cubeList[4]; std::cout << 0 << std::endl; break;
+		case 1: type = cubeList[5]; std::cout << 1 << std::endl; break;
+		case 2: type = cubeList[6]; std::cout << 2 << std::endl; break;
+		case 3: type = cubeList[7]; std::cout << 3 << std::endl; break;
+		case 4: type = cubeList[8]; std::cout << 4 << std::endl; break;
+		}
 		switch (face_r)
 		{
 		case(NONE):break;
@@ -326,7 +358,7 @@ public:
 
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
-			terrain.CubeInfo.push_back({ res , DIRT , ttmp });
+			terrain.CubeInfo.push_back({ res , type , ttmp });
 			std::cout << "PlaceSuccessfully left: " << res.x << ' ' << res.y << ' ' << res.z << std::endl;
 			break;
 		};
@@ -337,7 +369,7 @@ public:
 
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
-			terrain.CubeInfo.push_back({ res , DIRT , ttmp });
+			terrain.CubeInfo.push_back({ res , type , ttmp });
 			std::cout << "PlaceSuccessfully right: " << res.x << ' ' << res.y << ' ' << res.z << std::endl;
 			break;
 		};
@@ -348,7 +380,7 @@ public:
 
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
-			terrain.CubeInfo.push_back({ res , DIRT , ttmp });
+			terrain.CubeInfo.push_back({ res , type , ttmp });
 			std::cout << "PlaceSuccessfully up: " << res.x << ' ' << res.y << ' ' << res.z << std::endl;
 			break;
 		};
@@ -359,7 +391,7 @@ public:
 
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
-			terrain.CubeInfo.push_back({ res , DIRT , ttmp });
+			terrain.CubeInfo.push_back({ res , type , ttmp });
 			std::cout << "PlaceSuccessfully down: " << res.x << ' ' << res.y << ' ' << res.z << std::endl;
 			break;
 		};
@@ -373,7 +405,7 @@ public:
 
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
-			terrain.CubeInfo.push_back({ res , DIRT , ttmp });
+			terrain.CubeInfo.push_back({ res , type , ttmp });
 			std::cout << "PlaceSuccessfully forward: " << res.x << ' ' << res.y << ' ' << res.z << std::endl;
 			break;
 		};
@@ -383,7 +415,7 @@ public:
 			if (checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]) break;
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
-			terrain.CubeInfo.push_back({ res , DIRT , ttmp });
+			terrain.CubeInfo.push_back({ res , type , ttmp });
 			std::cout << "PlaceSuccessfully back: " << res.x << ' ' << res.y << ' ' << res.z << std::endl;
 			break;
 		};
