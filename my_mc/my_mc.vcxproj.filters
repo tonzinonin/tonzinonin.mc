@@ -95,7 +95,7 @@
     <ClInclude Include="src\LandLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UI.h">
+    <ClInclude Include="src\ui\ImgUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\thr\imgui\imconfig.h">
@@ -128,7 +128,7 @@
     <ClInclude Include="src\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cursor.h">
+    <ClInclude Include="src\ui\Cursor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ves\Texture.h">
@@ -137,7 +137,13 @@
     <ClInclude Include="src\ves\GameSetting\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ShortcutBar.h">
+    <ClInclude Include="src\ui\ShortcutBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\UItemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

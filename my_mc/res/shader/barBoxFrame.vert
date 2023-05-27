@@ -11,11 +11,5 @@ uniform int index;
 void main()
 {
 	TexCoords = texCoord;
-	mat4 xmodel =
-			mat4
-				(1., 0.0, 0.0, 0.0,
-				0.0, 1.0, 0.0, -0.4,
-				0.0, 0.0, 1.0, 0,
-				0.0, 0.0, 0.0, 1.0);
 	gl_Position = model * scale * vec4(aPos.x + index * 0.92, aPos.y , aPos.z , 1.0);
 }

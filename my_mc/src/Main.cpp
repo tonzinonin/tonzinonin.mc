@@ -19,12 +19,12 @@
 #include "ves/Texture.h"
 
 Camera camera;
+int stuffIndex = 0;
 
-#include "UI.h"
+#include "ui/ImgUI.h"
 #include "LandLoader.h"
 #include "Player.h"
-#include "Cursor.h"
-#include "ShortcutBar.h"
+#include "ui/Cursor.h"
 
 #define SCREEN_WIDTH 1080
 #define SCREEN_HEIGHT 1080
@@ -76,7 +76,6 @@ int main()
 	//glDepthFunc(GL_ALWAYS);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	ShortcutBar bar;
 	Cursor cursor;
 	Terrain terrain;
 	Sky sky;
@@ -100,7 +99,6 @@ int main()
 		player.Physics(deltaTime);
 		player.CheckCollider();
 
-		bar.Draw();
 		cursor.Draw();
 		sky.SkyDraw(camera);
 		terrain.TerrainDraw(camera);
@@ -108,8 +106,10 @@ int main()
 
 		glfwSwapBuffers(window);
 
+		CubeSelectActive = false;
 		CubePlaceActive = false; 
 		CubeDestroyActive = false;
+
 		glfwPollEvents();
 	}
 

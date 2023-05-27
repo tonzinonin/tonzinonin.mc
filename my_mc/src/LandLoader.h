@@ -17,15 +17,55 @@ float ma = -0x3f3f;
 enum CubeType
 {
     GRASS_BLOCK,
-    DIRT, 
-    DIAMOND ,
-    OAK_LOG ,
-    OAK_PLANKS ,
-    SANDSTONE ,
+    DIRT,
+    DIAMOND,
+    OAK_LOG,
+    OAK_PLANKS,
+    SANDSTONE,
     STONE,
-    TNT ,
-    WHITE_WOOL ,
-    SKYBOX
+    TNT,
+    WHITE_WOOL,
+    SKYBOX,
+
+    BEDROCK,
+    BIRCH_PLANKS,
+    BIRCH_LOG,
+    BLOCK_OF_DIAMOND,
+    BLACK_WOOL,
+    BLOCK_OF_GOLD,
+    BLOCK_OF_EMERAL,
+    BLOCK_OF_LAPIS,
+    BLOCK_OF_IRON,
+
+    BLOCK_OF_QUARTZ,
+    BLOCK_OF_REDSTONE,
+    BOOKSHELF,
+    BRICKS,
+    CARVED_PUMPKIN,
+    COAL_ORE,
+    CRAFTING_TABLE,
+    EMERALD_ORE,
+    FURNACE,
+
+    GLASS,
+    GLOWSTONE,
+    GOLD_ORE,
+    HAY_BALE,
+    ICE,
+    IRON_ORE,
+    LAPIS_LAZULI_ORE,
+    LIGHT_BLUE_WOOL,
+    LIME_WOOL,
+
+    MAGENTA_WOOL,
+    ORANGE_WOOL,
+    PINK_WOOL,
+    RED_WOOL,
+    YELLOW_WOOL,
+    MELON,
+    REDSTONE_ORE,
+    SAND,
+    STONE_BRICKS
 };
 
 struct BoxAxisStruct
@@ -134,7 +174,10 @@ public:
             if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera, it.location);
             if (it.type == DIRT) dirt.DrawCube(camera, it.location);
             if (it.type == DIAMOND) diamond.DrawCube(camera, it.location);
-            if (it.type == OAK_LOG) oak_log.DrawCube(camera, it.location);
+            if (it.type == OAK_LOG)
+            {
+                oak_log.DrawCube(camera, it.location);
+            }
             if (it.type == OAK_PLANKS) oak_planks.DrawCube(camera, it.location);
             if (it.type == SANDSTONE) sandstone.DrawCube(camera, it.location);
             if (it.type == STONE) stone.DrawCube(camera, it.location);

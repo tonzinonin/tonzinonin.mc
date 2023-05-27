@@ -3,15 +3,25 @@
 #include "ves/Camera.h"
 #include "GL/glew.h"
 #include "LandLoader.h"
+
+#include "ui/Menu.h"
+#include "ui/ShortcutBar.h"
+
 #include <cmath>
 
-bool isMouse = false;
-
-int stuffIndex = 0;
-
+bool isLook = true;
+bool is_menu = false;
+float cursor_pos_x;
+float cursor_pos_y;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	camera.LookMovement(xpos, ypos);
+	if(!is_menu)
+		camera.LookMovement(xpos, ypos);
+	else
+	{
+		cursor_pos_x = xpos;
+		cursor_pos_y = ypos;
+	}
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -22,49 +32,49 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	if (stuffIndex > 4) stuffIndex = 4;
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_R && action == GLFW_RELEASE)
-	{
-		if (isMouse == false)
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			glfwSetCursorPosCallback(window, NULL);
-			isMouse = true;
-		}
-		else
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			glfwSetCursorPosCallback(window, mouse_callback);
-			isMouse = false;
-		}
-	}
-}
-
 bool isPlace = false;
 bool isDestroy = false;
+
+bool isSelect = false;
+
+bool CubeSelectActive = false;
 bool CubePlaceActive = false;
 bool CubeDestroyActive = false;
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && isPlace == false)
+	if (is_menu == false)
 	{
-		CubePlaceActive = true;
-		isPlace = true;
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && isPlace == false)
+		{
+			CubePlaceActive = true;
+			isPlace = true;
+		}
+		if (isPlace == true && button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+		{
+			isPlace = false;
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && isPlace == false)
+		{
+			CubeDestroyActive = true;
+			isDestroy = true;
+		}
+		if (isPlace == true && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+		{
+			isDestroy = false;
+		}
 	}
-	if (isPlace == true && button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+	else
 	{
-		isPlace = false;
-	}
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && isPlace == false)
-	{
-		CubeDestroyActive = true;
-		isDestroy = true;
-	}
-	if (isPlace == true && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
-	{
-		isDestroy = false;
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && isPlace == false)
+		{
+			CubeSelectActive = true;
+			isSelect = true;
+		}
+		if (isPlace == true && button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+		{
+			isSelect = false;
+		}
 	}
 }
 
@@ -83,13 +93,16 @@ private:
 	GLFWwindow*& window;
 	Camera& camera;
 	Terrain& terrain;
-		
+	
+	Menu menu;
+	ShortcutBar bar;
+
 public:
 
 	float Collier_p_x = 0.5;
 	float Collier_p_y = 0.4;
 	float Collier_p_z = 0.5;
-	float Collier_n_x = 0.4;
+	float Collier_n_x = 0.5;
 	float Collier_n_y = 1.5;
 	float Collier_n_z = 0.5;
 
@@ -103,6 +116,8 @@ public:
 
 	float CubeStride = 1.0f;
 
+	bool menu_check = false;
+
 	CubeType cubeList[9];
 
 	Player(GLFWwindow*& window, Camera& camera, Terrain& terrain)
@@ -112,7 +127,6 @@ public:
 	{
 		glfwSetCursorPosCallback(window, mouse_callback);
 		glfwSetScrollCallback(window, scroll_callback);
-		glfwSetKeyCallback(window, key_callback);
 		glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
 		cubeList[0] = GRASS_BLOCK;
@@ -133,8 +147,53 @@ public:
 		if (isJump) JumpCheck(deltaTime);
 		if (CubePlaceActive) RayCheckCube(GENERATE);
 		if (CubeDestroyActive) RayCheckCube(DESTROY);
+		if (CubeSelectActive) SelectCheck();
+		if (is_menu)
+		{
+			menu.DrawAll(); 
+			DrawListInMenu();
+			menu.Draw();
+		}
+		else
+		{
+			DrawList();
+			bar.Draw();
+		}
 	}
 
+	//void SelectCheck()
+	//{
+	//	float box_stride = 10;
+	//	float locationx;
+	//	float locationy;
+	//	for(int i = 0 ; i < 5 ; i++)
+	//		for (int j = 0; j < 9; j++)
+	//		{
+	//			float locationx = SCREEN_HEIGHT / 2;
+	//			float locationy = SCREEN_WIDTH / 2;
+	//			locationx = locationx * i * 0.18 + 100;
+	//			locationy = locationy * j * 0.1 + 100;
+	//			if (cursor_pos_x)
+	//			{
+	//				//TODO
+	//			}
+	//		}
+	//}
+
+	void DrawList()
+	{
+		for (int i = 0; i < 9; i++)
+		{
+			menu.DrawIcon(cubeList[i], float(i) * 0.11 - 0.44, -0.5);
+		}
+	}
+	void DrawListInMenu()
+	{
+		for (int i = 0; i < 9; i++)
+		{
+			menu.DrawIcon(cubeList[i], float(i) * 0.107 - 0.428, -0.31);
+		}
+	}
 	void DropCheck(float deltaTime)
 	{
 		if (Jump_check == false)
@@ -165,7 +224,26 @@ public:
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.PositionMovement(deltaTime, BACKWARD);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.PositionMovement(deltaTime, RIGHT);
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.PositionMovement(deltaTime, LEFT);
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) camera.PositionMovement(deltaTime, UP);
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) camera.PositionMovement(deltaTime, UP);		
+
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && menu_check == false)
+		{
+			menu_check = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE && menu_check == true)
+		{
+			menu_check = false;
+			if (is_menu == false)
+			{
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				is_menu = true;
+			}
+			else if (is_menu == true) 
+			{
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				is_menu = false;
+			}
+		}
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && Jump_check == true)
 		{
@@ -220,7 +298,10 @@ public:
 		z = z0 + t * vz;
 
 		float dist = (x - x0) * (x - x0) + (y - y0) * (y - y0) + (z - z0) * (z - z0);
-
+		
+		float v1px = x - camera.cameraPos.x;
+		float v2px = camera.cameraFront.x;
+		if (v1px * v2px < 0) return 0x3f3f3f3f;
 		return dist;
 	}
 
@@ -236,7 +317,7 @@ public:
 			float dist = dist_r;
 			face_check face = NONE;
 			float x, y, z;
-			float tmp = r_equation(1, 0, 0, -it -> BoxAxis.n_x, x, y, z);//n
+			float tmp = r_equation(1, 0, 0, -(it -> BoxAxis.n_x), x, y, z);//n
 			if (y < it -> BoxAxis.p_y
 				&& y > it -> BoxAxis.n_y
 				&& z < it -> BoxAxis.p_z
@@ -246,7 +327,7 @@ public:
 				face = FC_LEFT;
 				dist = tmp;
 			}
-			tmp = r_equation(1, 0, 0, -it -> BoxAxis.p_x, x, y, z);//p
+			tmp = r_equation(1, 0, 0, -(it -> BoxAxis.p_x), x, y, z);//p
 			if (y < it -> BoxAxis.p_y
 				&& y > it -> BoxAxis.n_y
 				&& z < it -> BoxAxis.p_z
@@ -256,7 +337,7 @@ public:
 				face = FC_RIGHT;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 1, 0, -it -> BoxAxis.n_y, x, y, z);
+			tmp = r_equation(0, 1, 0, -(it -> BoxAxis.n_y), x, y, z);
 			if (x < it -> BoxAxis.p_x
 				&& x > it -> BoxAxis.n_x
 				&& z < it -> BoxAxis.p_z
@@ -266,7 +347,7 @@ public:
 				face = FC_UP;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 1, 0, -it -> BoxAxis.p_y, x, y, z);
+			tmp = r_equation(0, 1, 0, -(it -> BoxAxis.p_y), x, y, z);
 			if (x < it -> BoxAxis.p_x
 				&& x > it -> BoxAxis.n_x
 				&& z < it -> BoxAxis.p_z
@@ -276,7 +357,7 @@ public:
 				face = FC_DOWN;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 0, 1, -it -> BoxAxis.n_z, x, y, z);
+			tmp = r_equation(0, 0, 1, -(it -> BoxAxis.n_z), x, y, z);
 			if (y < it -> BoxAxis.p_y
 				&& y > it -> BoxAxis.n_y
 				&& x < it -> BoxAxis.p_x
@@ -286,7 +367,7 @@ public:
 				face = FC_FORWARD;
 				dist = tmp;
 			}
-			tmp = r_equation(0, 0, 1, -it -> BoxAxis.p_z, x, y, z);
+			tmp = r_equation(0, 0, 1, -(it -> BoxAxis.p_z), x, y, z);
 			if (y < it -> BoxAxis.p_y
 				&& y > it -> BoxAxis.n_y
 				&& x < it -> BoxAxis.p_x
@@ -397,11 +478,8 @@ public:
 		};
 		case(FC_FORWARD): {
 			BoxAxisStruct ttmp;
-			std::cout << "f?" << std::endl;
 			glm::vec3 res = glm::vec3(cubestruct_r.location.x, cubestruct_r.location.y, cubestruct_r.location.z - CubeStride);
-			std::cout << "forward:" << res.x << ' ' << res.y << ' ' << res.z;
 			if (checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]) break;
-			std::cout << "f!" << std::endl;
 
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
@@ -413,6 +491,7 @@ public:
 			BoxAxisStruct ttmp;
 			glm::vec3 res = glm::vec3(cubestruct_r.location.x, cubestruct_r.location.y, cubestruct_r.location.z + CubeStride);
 			if (checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]) break;
+
 			checkout[int(res.x) + 11][int(res.y) + 11][int(res.z) + 11]++;
 			ttmp.GetAxis(res.x, res.y, res.z);
 			terrain.CubeInfo.push_back({ res , type , ttmp });

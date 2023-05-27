@@ -1,13 +1,13 @@
 #pragma once
 #pragma once
 
-#include "thr/imgui/imgui.h"
-#include "thr/imgui/imgui_impl_glfw.h"
-#include "thr/imgui/imgui_impl_opengl3.h"
+#include "../thr/imgui/imgui.h"
+#include "../thr/imgui/imgui_impl_glfw.h"
+#include "../thr/imgui/imgui_impl_opengl3.h"
 
-#include "ves/Camera.h"
-#include "Player.h"
-#include "LandLoader.h"
+#include "../ves/Camera.h"
+#include "../Player.h"
+#include "../LandLoader.h"
 
 class OpenglImgui
 {
@@ -28,12 +28,8 @@ public:
 	void ShowPositionInformation()
 	{
 		ImGui::Text("camera position: x = %.3f , y = %.3f , z = %.3f\n", camera.cameraPos.x, camera.cameraPos.y, camera.cameraPos.z);
-		ImGui::Text("fabs(it.location.y - camera.cameraPos.y) = %.3f : 0.9", 0 - camera.cameraPos.y);
-		//ImGui::Text("camera.cameraPos.y - it.location.y = %.3f : 2", camera.cameraPos.y);
 
-		ImGui::Text("fabs(it.location.z - camera.cameraPos.z) = %.3f : 1", 0 - camera.cameraPos.z);
-		//ImGui::Text("camera.cameraPos.z - it.location.z = %.3f : 1", camera.cameraPos.z);
-		ImGui::Text("camera.cameraPos.x - Collier_n_x = %.3f : 0.5", camera.cameraPos.x - 0.5);
+		ImGui::Text("mouse cursor position : x = %.3f y = %3f", cursor_pos_x , cursor_pos_y);
 		ImGui::Text("Pos: %.3f %.3f %.3f", camera.cameraPos.x, camera.cameraPos.y, camera.cameraPos.z);		
 		ImGui::Text("PosLastFrame -> Pos Vector: %.3f %.3f %.3f", camera.cameraPos.x - camera.cameraPosLastFrame.x
 			, camera.cameraPos.y - camera.cameraPosLastFrame.y, camera.cameraPos.z - camera.cameraPosLastFrame.z);
