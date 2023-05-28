@@ -3,9 +3,6 @@
 #include "CubeGameObject.h"
 #include <algorithm>
 
-#define SCREEN_WIDTH 768
-#define SCREEN_HEIGHT 768
-
 int checkout[105][105][105];
 
 int dx[] = {1 , -1 , 0 , 0 , 0 , 0};
@@ -65,7 +62,9 @@ enum CubeType
     MELON,
     REDSTONE_ORE,
     SAND,
-    STONE_BRICKS
+    STONE_BRICKS,
+
+    TYPE_NONE
 };
 
 struct BoxAxisStruct
@@ -105,6 +104,45 @@ private:
     CubeGameObject tnt;
     CubeGameObject white_wool;
 
+    CubeGameObject bedrock;
+    CubeGameObject birch_planks;
+    CubeGameObject birch_log;
+    CubeGameObject block_of_diamond;
+    CubeGameObject black_wool;
+    CubeGameObject block_of_gold;
+    CubeGameObject block_of_emerald;
+    CubeGameObject block_of_lapis;
+    CubeGameObject block_of_iron;
+
+    CubeGameObject block_of_quartz;
+    CubeGameObject block_of_redstone;
+    CubeGameObject bookshelf;
+    CubeGameObject bricks;
+    CubeGameObject carved_pumpkin;
+    CubeGameObject coal_ore;
+    CubeGameObject crafting_table;
+    CubeGameObject emerald_ore;
+    CubeGameObject furnace;
+
+    CubeGameObject glass;
+    CubeGameObject glowstone;
+    CubeGameObject gold_ore;
+    CubeGameObject hay_bale;
+    CubeGameObject ice;
+    CubeGameObject iron_ore;
+    CubeGameObject lapis_lazuli_ore;
+    CubeGameObject light_blue_wool;
+    CubeGameObject lime_wool;
+
+    CubeGameObject magenta_wool;
+    CubeGameObject orange_wool;
+    CubeGameObject pink_wool;
+    CubeGameObject red_wool;
+    CubeGameObject yellow_wool;
+    CubeGameObject melon;
+    CubeGameObject redstone_ore;
+    CubeGameObject sand;
+    CubeGameObject stone_bricks;
 public:
 
     std::vector<CubeStruct> CubeInfo;
@@ -118,45 +156,87 @@ public:
                 sandstone("res/texture/terrian/sandstone", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
                 stone("res/texture/terrian/stone", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
                 tnt("res/texture/terrian/tnt", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
-                white_wool("res/texture/terrian/white_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB)
+                white_wool("res/texture/terrian/white_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGB),
+    
+                bedrock("res/texture/terrian/bedrock", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                birch_planks("res/texture/terrian/birch_planks", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                birch_log("res/texture/terrian/birch_log", "res/shader/basic.vert", "res/shader/basic.frag",GL_RGBA),
+                block_of_diamond("res/texture/terrian/block_of_diamond", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                black_wool("res/texture/terrian/black_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                block_of_gold("res/texture/terrian/block_of_gold", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                block_of_emerald("res/texture/terrian/block_of_emerald", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                block_of_lapis("res/texture/terrian/block_of_lapis", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                block_of_iron("res/texture/terrian/block_of_iron", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+
+                block_of_quartz("res/texture/terrian/block_of_quartz", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                block_of_redstone("res/texture/terrian/block_of_redstone", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                bookshelf("res/texture/terrian/bookshelf", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                bricks("res/texture/terrian/bricks", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                carved_pumpkin("res/texture/terrian/carved_pumpkin", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                coal_ore("res/texture/terrian/coal_ore", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                crafting_table("res/texture/terrian/crafting_table", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                emerald_ore("res/texture/terrian/emerald_ore", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                furnace("res/texture/terrian/furnace", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+
+                glass("res/texture/terrian/glass", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                glowstone("res/texture/terrian/glowstone", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                gold_ore("res/texture/terrian/gold_ore", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                hay_bale("res/texture/terrian/hay_bale", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                ice("res/texture/terrian/ice", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                iron_ore("res/texture/terrian/iron_ore", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                lapis_lazuli_ore("res/texture/terrian/lapis_lazuli_ore", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                light_blue_wool("res/texture/terrian/light_blue_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                lime_wool("res/texture/terrian/lime_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+
+                magenta_wool("res/texture/terrian/magenta_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                orange_wool("res/texture/terrian/orange_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                pink_wool("res/texture/terrian/pink_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                red_wool("res/texture/terrian/red_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                yellow_wool("res/texture/terrian/yellow_wool", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                melon("res/texture/terrian/melon", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                redstone_ore("res/texture/terrian/redstone_ore", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                sand("res/texture/terrian/sand", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA),
+                stone_bricks("res/texture/terrian/stone_bricks", "res/shader/basic.vert", "res/shader/basic.frag", GL_RGBA)
     {
         TerrainInit();
     }
     void TerrainInit()
     {
-        //BoxAxisStruct tmp;
-        //tmp.GetAxis(0, 0, 0);
-        //CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
-        for (int i = -10; i < 10; i += 1)
-        {
-            for (int j = -10; j < 10; j += 1)
-            {
-                float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
-                mi = std::min(mi, perlin);
-                ma = std::max(ma, perlin);
-                //std::cout <<"noisevalue : "<< perlin << std::endl;
-                int y = 0;
-                while(1)
-                {
-                    if (y > perlin * 10 + 10)
-                    {
-                        BoxAxisStruct tmp;
-                        tmp.GetAxis(i, y, j);
-                        CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , GRASS_BLOCK , tmp});
+        BoxAxisStruct tmp;
+        tmp.GetAxis(0, 0, 0);
+        CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
+        checkout[11][11][11]++;
 
-                        checkout[i + 11][y + 11][j + 11]++;
-                        break;
-                    }         
+        //for (int i = -10; i < 10; i += 1)
+        //{
+        //    for (int j = -10; j < 10; j += 1)
+        //    {
+        //        float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
+        //        mi = std::min(mi, perlin);
+        //        ma = std::max(ma, perlin);
+        //        //std::cout <<"noisevalue : "<< perlin << std::endl;
+        //        int y = 0;
+        //        while(1)
+        //        {
+        //            if (y > perlin * 10 + 10)
+        //            {
+        //                BoxAxisStruct tmp;
+        //                tmp.GetAxis(i, y, j);
+        //                CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , GRASS_BLOCK , tmp});
 
-                    BoxAxisStruct tmp;
-                    tmp.GetAxis(i, y, j);
-                    CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , DIRT , tmp});
+        //                checkout[i + 11][y + 11][j + 11]++;
+        //                break;
+        //            }         
 
-                    checkout[i + 11][y + 11][j + 11]++;
-                    y += 1;
-                }
-            }
-        }
+        //            BoxAxisStruct tmp;
+        //            tmp.GetAxis(i, y, j);
+        //            CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , DIRT , tmp});
+
+        //            checkout[i + 11][y + 11][j + 11]++;
+        //            y += 1;
+        //        }
+        //    }
+        //}
         //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
@@ -171,19 +251,58 @@ public:
             //{
             //    VisbleCubeInfo.push_back(it);
             //}
-            if (it.type == GRASS_BLOCK) grass_block.DrawCube(camera, it.location);
-            if (it.type == DIRT) dirt.DrawCube(camera, it.location);
-            if (it.type == DIAMOND) diamond.DrawCube(camera, it.location);
-            if (it.type == OAK_LOG)
+            switch (it.type)
             {
-                oak_log.DrawCube(camera, it.location);
-            }
-            if (it.type == OAK_PLANKS) oak_planks.DrawCube(camera, it.location);
-            if (it.type == SANDSTONE) sandstone.DrawCube(camera, it.location);
-            if (it.type == STONE) stone.DrawCube(camera, it.location);
-            if (it.type == TNT) tnt.DrawCube(camera, it.location);
-            if (it.type == WHITE_WOOL) white_wool.DrawCube(camera, it.location);
+            case (GRASS_BLOCK): grass_block.DrawCube(camera, it.location);break;
+            case (DIRT):        dirt.DrawCube(camera, it.location);       break;
+            case (DIAMOND):     diamond.DrawCube(camera, it.location);    break;
+            case (OAK_LOG):     oak_log.DrawCube(camera, it.location);    break;
+            case (OAK_PLANKS):  oak_planks.DrawCube(camera, it.location); break;
+            case (SANDSTONE):   sandstone.DrawCube(camera, it.location);  break;
+            case (STONE):       stone.DrawCube(camera, it.location);      break;
+            case (TNT):         tnt.DrawCube(camera, it.location);        break;
+            case (WHITE_WOOL):  white_wool.DrawCube(camera, it.location); break;
 
+            case (BEDROCK):         bedrock.DrawCube(camera, it.location);         break;
+            case (BIRCH_PLANKS):    birch_planks.DrawCube(camera, it.location);    break;
+            case (BIRCH_LOG):	    birch_log.DrawCube(camera, it.location);       break;
+            case (BLOCK_OF_DIAMOND):block_of_diamond.DrawCube(camera, it.location);break;
+            case (BLACK_WOOL):	    black_wool.DrawCube(camera, it.location);      break;
+            case (BLOCK_OF_GOLD):	block_of_gold.DrawCube(camera, it.location);   break;
+            case (BLOCK_OF_EMERAL): block_of_emerald.DrawCube(camera, it.location);break;
+            case (BLOCK_OF_LAPIS):	block_of_lapis.DrawCube(camera, it.location);  break;
+            case (BLOCK_OF_IRON):	block_of_iron.DrawCube(camera, it.location);   break;
+
+            case (BLOCK_OF_QUARTZ):  block_of_quartz.DrawCube(camera, it.location);   break;
+            case (BLOCK_OF_REDSTONE):block_of_redstone.DrawCube(camera, it.location); break;
+            case (BOOKSHELF):		 bookshelf.DrawCube(camera, it.location);         break;
+            case (BRICKS):			 bricks.DrawCube(camera, it.location);            break;
+            case (CARVED_PUMPKIN):	 carved_pumpkin.DrawCube(camera, it.location);    break;
+            case (COAL_ORE):		 coal_ore.DrawCube(camera, it.location);          break;
+            case (CRAFTING_TABLE):	 crafting_table.DrawCube(camera, it.location);    break;
+            case (EMERALD_ORE):		 emerald_ore.DrawCube(camera, it.location);       break;
+            case (FURNACE):			 furnace.DrawCube(camera, it.location);           break;
+
+            case (GLASS):			 glass.DrawCube(camera, it.location);           break;
+            case (GLOWSTONE):		 glowstone.DrawCube(camera, it.location);       break;
+            case (GOLD_ORE):		 gold_ore.DrawCube(camera, it.location);        break;
+            case (HAY_BALE):		 hay_bale.DrawCube(camera, it.location);        break;
+            case (ICE):				 ice.DrawCube(camera, it.location);             break;
+            case (IRON_ORE):		 iron_ore.DrawCube(camera, it.location);        break;
+            case (LAPIS_LAZULI_ORE): lapis_lazuli_ore.DrawCube(camera, it.location);break;
+            case (LIGHT_BLUE_WOOL):	 light_blue_wool.DrawCube(camera, it.location); break;
+            case (LIME_WOOL):		 lime_wool.DrawCube(camera, it.location);       break;
+
+            case (MAGENTA_WOOL):	 magenta_wool.DrawCube(camera, it.location);    break;
+            case (ORANGE_WOOL):		 orange_wool.DrawCube(camera, it.location);     break;
+            case (PINK_WOOL):		 pink_wool.DrawCube(camera, it.location);       break;
+            case (RED_WOOL):		 red_wool.DrawCube(camera, it.location);        break;
+            case (YELLOW_WOOL):		 yellow_wool.DrawCube(camera, it.location);     break;
+            case (MELON):			 melon.DrawCube(camera, it.location);           break;
+            case (REDSTONE_ORE):	 redstone_ore.DrawCube(camera, it.location);    break;
+            case (SAND):			 sand.DrawCube(camera, it.location);            break;
+            case (STONE_BRICKS):	 stone_bricks.DrawCube(camera, it.location);    break;
+            }
         }
     }
 

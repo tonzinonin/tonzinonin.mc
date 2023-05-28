@@ -30,6 +30,7 @@ protected:
 	Shader shader;
 	VertexBufferLayout layout;
 public:
+	UI() = default;
 	UI(std::string textureFilepath , std::string vertFilepath , std::string fragFilepath)
 	{
 		this->texture.T_INIT(textureFilepath , GL_RGBA);

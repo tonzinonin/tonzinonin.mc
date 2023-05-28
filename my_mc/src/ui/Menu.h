@@ -9,17 +9,19 @@ class Icon : UI
 {
 private:
 public:
+	Icon() = default;
 	Icon(std::string path) : UI(path, "res/shader/UI.vert", "res/shader/UI.frag")
 	{}
 	void Draw(float x , float y)
 	{
+		float k = (float)SCREEN_HEIGHT / (float)SCREEN_WIDTH;
 		this->UIbind();
 
 		glm::mat4 trans = glm::mat4(1.0);
-		trans = glm::scale(trans, glm::vec3(0.075, 0.08, 0.8));
+		trans = glm::scale(trans, glm::vec3(0.075 * k , 0.08, 0.8));
 
 		glm::mat4 model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(x , y , 0.));
+		model = glm::translate(model, glm::vec3(x * k, y, 0.));
 
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetRendererID(), "model"), 1, GL_FALSE, &model[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetRendererID(), "scale"), 1, GL_FALSE, &trans[0][0]);
@@ -83,57 +85,19 @@ private:
 	Icon stone_bricks;
 public:
 
+	std::unordered_map<CubeType, Icon> iconMap;
+
 	CubeType pack_icon_map[5][9] =
 	{
-	GRASS_BLOCK,
-	DIRT,
-	DIAMOND,
-	OAK_LOG,
-	OAK_PLANKS,
-	SANDSTONE,
-	STONE,
-	TNT,
-	WHITE_WOOL,
+	GRASS_BLOCK , DIRT , DIAMOND , OAK_LOG , OAK_PLANKS , SANDSTONE , STONE,TNT , WHITE_WOOL,
 
-	BEDROCK,
-	BIRCH_PLANKS,
-	BIRCH_LOG,
-	BLOCK_OF_DIAMOND,
-	BLACK_WOOL,
-	BLOCK_OF_GOLD,
-	BLOCK_OF_EMERAL,
-	BLOCK_OF_LAPIS,
-	BLOCK_OF_IRON,
+	BEDROCK , BIRCH_PLANKS , BIRCH_LOG , BLOCK_OF_DIAMOND , BLACK_WOOL , BLOCK_OF_GOLD , BLOCK_OF_EMERAL , BLOCK_OF_LAPIS , BLOCK_OF_IRON,
 
-	BLOCK_OF_QUARTZ,
-	BLOCK_OF_REDSTONE,
-	BOOKSHELF,
-	BRICKS,
-	CARVED_PUMPKIN,
-	COAL_ORE,
-	CRAFTING_TABLE,
-	EMERALD_ORE,
-	FURNACE,
+	BLOCK_OF_QUARTZ , BLOCK_OF_REDSTONE , BOOKSHELF , BRICKS , CARVED_PUMPKIN , COAL_ORE , CRAFTING_TABLE , EMERALD_ORE , FURNACE,
 
-	GLASS,
-	GLOWSTONE,
-	GOLD_ORE,
-	HAY_BALE,
-	ICE,
-	IRON_ORE,
-	LAPIS_LAZULI_ORE,
-	LIGHT_BLUE_WOOL,
-	LIME_WOOL,
+	GLASS , GLOWSTONE , GOLD_ORE , HAY_BALE , ICE , IRON_ORE , LAPIS_LAZULI_ORE , LIGHT_BLUE_WOOL , LIME_WOOL,
 
-	MAGENTA_WOOL,
-	ORANGE_WOOL,
-	PINK_WOOL,
-	RED_WOOL,
-	YELLOW_WOOL,
-	MELON,
-	REDSTONE_ORE,
-	SAND,
-	STONE_BRICKS
+	MAGENTA_WOOL , ORANGE_WOOL , PINK_WOOL , RED_WOOL , YELLOW_WOOL , MELON , REDSTONE_ORE , SAND , STONE_BRICKS
 	};
 	//std::unordered_map<CubeType, Icon> icon_uodmap;
 
@@ -258,9 +222,10 @@ public:
 	void Draw()
 	{
 		this->UIbind();
+		float k = (float)SCREEN_HEIGHT / (float)SCREEN_WIDTH;
 
 		glm::mat4 trans = glm::mat4(1.0);
-		trans = glm::scale(trans, glm::vec3(1, 0.745 , 1.0));
+		trans = glm::scale(trans, glm::vec3(1.0 * k , 0.745 , 1.0));
 
 		glm::mat4 model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0., 0., 0.));

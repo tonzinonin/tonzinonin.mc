@@ -21,13 +21,15 @@
 Camera camera;
 int stuffIndex = 0;
 
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+
 #include "ui/ImgUI.h"
 #include "LandLoader.h"
 #include "Player.h"
 #include "ui/Cursor.h"
 
-#define SCREEN_WIDTH 1080
-#define SCREEN_HEIGHT 1080
+
 int IMGUI_WIDTH = 600;
 int IMGUI_HEIGHT = 300;
 
@@ -73,6 +75,9 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
+	//glEnable(GL_POLYGON_MODE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	//glDepthFunc(GL_ALWAYS);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -93,7 +98,7 @@ int main()
 		deltaTime = timeValue - lastFrame;
 		lastFrame = timeValue;
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		//glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		player.Physics(deltaTime);
@@ -109,6 +114,7 @@ int main()
 		CubeSelectActive = false;
 		CubePlaceActive = false; 
 		CubeDestroyActive = false;
+		CubeSwapActive = false;
 
 		glfwPollEvents();
 	}

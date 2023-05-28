@@ -11,8 +11,10 @@ public:
 	void Draw()
 	{
 		this->UIbind();
+
+		float k = (float)SCREEN_HEIGHT / (float)SCREEN_WIDTH;
 		glm::mat4 trans = glm::mat4(1.0);
-		trans = glm::scale(trans, glm::vec3(0.12, 0.12, 1.0));
+		trans = glm::scale(trans, glm::vec3(0.12 * k, 0.12, 1.0));
 
 		glm::mat4 model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0., -0.5, 0.));
@@ -41,8 +43,9 @@ public:
 
 		this->UIbind();
 
+		float k = (float)SCREEN_HEIGHT / (float)SCREEN_WIDTH;
 		glm::mat4 trans = glm::mat4(1.0);
-		trans = glm::scale(trans, glm::vec3(1, 0.12, 1.0));
+		trans = glm::scale(trans, glm::vec3(1 * k, 0.12, 1.0));
 
 		glm::mat4 model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0., -0.5, 0.));

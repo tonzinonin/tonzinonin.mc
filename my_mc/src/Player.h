@@ -34,12 +34,14 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 
 bool isPlace = false;
 bool isDestroy = false;
-
 bool isSelect = false;
+bool isSwap = false;
+bool isChange = false;
 
 bool CubeSelectActive = false;
 bool CubePlaceActive = false;
 bool CubeDestroyActive = false;
+bool CubeSwapActive = false;
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -64,16 +66,39 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 			isDestroy = false;
 		}
 	}
-	else
+	else if (is_menu == true)
 	{
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS && isPlace == false)
+		if (isSwap == false)
 		{
-			CubeSelectActive = true;
-			isSelect = true;
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && isSelect == false)
+			{
+
+				isSelect = true;
+			}
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE && isSelect == true)
+			{
+				isSelect = false;
+
+				CubeSelectActive = true;
+
+				isSwap = true;
+			}
 		}
-		if (isPlace == true && button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
+		else if (isSwap == true)
 		{
-			isSelect = false;
+			if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && isChange == false)
+			{
+
+				isChange = true;
+			}
+			if (isChange == true && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
+			{
+				isChange = false;
+
+				CubeSwapActive = true;
+
+				isSwap = false;
+			}
 		}
 	}
 }
@@ -117,8 +142,14 @@ public:
 	float CubeStride = 1.0f;
 
 	bool menu_check = false;
+	bool is_icon_track = false;
 
 	CubeType cubeList[9];
+
+	CubeType cubeSelectedType = TYPE_NONE;
+	CubeType cubeSwapedType = TYPE_NONE;
+
+	int menuPos_swap_id;
 
 	Player(GLFWwindow*& window, Camera& camera, Terrain& terrain)
 		: window(window),
@@ -143,13 +174,39 @@ public:
 
 	void Physics(float& deltaTime)
 	{
-		DropCheck(deltaTime);
-		if (isJump) JumpCheck(deltaTime);
-		if (CubePlaceActive) RayCheckCube(GENERATE);
+		//DropCheck(deltaTime);
+		//if (isJump) JumpCheck(deltaTime);
+		if (CubePlaceActive && cubeList[stuffIndex] != TYPE_NONE) RayCheckCube(GENERATE);
 		if (CubeDestroyActive) RayCheckCube(DESTROY);
-		if (CubeSelectActive) SelectCheck();
+
 		if (is_menu)
 		{
+			if (CubeSelectActive)
+			{
+				std::cout << "check!" << std::endl;
+				std::cout << "cursor_pos : " << cursor_pos_x << ' ' << cursor_pos_y << std::endl;
+				std::cout << "screen : " << SCREEN_WIDTH << ' ' << SCREEN_HEIGHT << std::endl;
+
+				cubeSelectedType = MenuPressCheck();
+				if (cubeSelectedType == TYPE_NONE) isSwap = false;
+				is_icon_track = true;
+			}
+			if (CubeSwapActive)
+			{
+				is_icon_track = false;
+				menuPos_swap_id = MenuListPressCheck();
+				if (menuPos_swap_id != -1)
+				{
+					cubeList[menuPos_swap_id] = cubeSelectedType;
+					cubeSelectedType = TYPE_NONE;
+				}
+			}
+			if (is_icon_track == true && cubeSelectedType != TYPE_NONE)
+			{
+				float sx = (cursor_pos_x / SCREEN_WIDTH - 0.5) * 2;
+				float sy = ( - cursor_pos_y / SCREEN_HEIGHT + 0.5) * 2;
+				menu.DrawIcon(cubeSelectedType, sx * SCREEN_WIDTH / SCREEN_HEIGHT , sy);
+			}
 			menu.DrawAll(); 
 			DrawListInMenu();
 			menu.Draw();
@@ -161,24 +218,72 @@ public:
 		}
 	}
 
-	//void SelectCheck()
-	//{
-	//	float box_stride = 10;
-	//	float locationx;
-	//	float locationy;
-	//	for(int i = 0 ; i < 5 ; i++)
-	//		for (int j = 0; j < 9; j++)
-	//		{
-	//			float locationx = SCREEN_HEIGHT / 2;
-	//			float locationy = SCREEN_WIDTH / 2;
-	//			locationx = locationx * i * 0.18 + 100;
-	//			locationy = locationy * j * 0.1 + 100;
-	//			if (cursor_pos_x)
-	//			{
-	//				//TODO
-	//			}
-	//		}
-	//}
+	unsigned int MenuListPressCheck()
+	{
+		float box_stride = 27;
+		int j;
+		bool isNone = true;
+		for (j = 0; j < 9; j++)
+		{
+			float locationx = SCREEN_WIDTH / 2;
+			float locationy = SCREEN_HEIGHT / 2;
+
+			locationx = locationx - 230 + j * 57.25;
+			locationy = locationy + 169;
+
+			std::cout << "x:" << locationx << " y:" << locationy << std::endl;
+
+			int right = locationx + box_stride;
+			int left = locationx - box_stride;
+			int up = locationy + box_stride;
+			int down = locationy - box_stride;
+
+			if (cursor_pos_x < right && cursor_pos_x > left
+				&& cursor_pos_y < up && cursor_pos_y > down)
+			{
+				isNone = false;
+				break;
+			}
+		}
+		if (isNone) return -1;
+		return j;
+	}
+
+	CubeType MenuPressCheck()
+	{
+		CubeType ans_type = TYPE_NONE;
+		float box_stride = 27;
+		float locationx;
+		float locationy;
+		bool isbreak = false;
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 9; j++)
+			{
+				float locationx = SCREEN_WIDTH / 2;
+				float locationy = SCREEN_HEIGHT / 2;
+
+				locationx = locationx - 230 + j * 57.25;
+				locationy = locationy - 132 + i * 57.75;
+
+				int right = locationx + box_stride;
+				int left = locationx - box_stride;
+				int up = locationy + box_stride;
+				int down = locationy - box_stride;
+
+				if (cursor_pos_x < right && cursor_pos_x > left
+					&& cursor_pos_y < up && cursor_pos_y > down)
+				{
+					ans_type = menu.pack_icon_map[i][j];
+					isbreak = true;
+					break;
+					//TODO
+				}
+			}
+			if (isbreak) break;
+		}
+		return ans_type;
+	}
 
 	void DrawList()
 	{

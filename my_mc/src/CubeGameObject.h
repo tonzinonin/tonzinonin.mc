@@ -14,9 +14,6 @@
 #include "ves/GameSetting/VertexBuffer.h"
 #include "ves/GameSetting/VertexBufferLayout.h"
 
-#define SCREEN_WIDTH 768
-#define SCREEN_HEIGHT 768
-
 float positions[] =
 {
 	-0.5f, -0.5f, -0.5f,   0.0f, 0.0f,
