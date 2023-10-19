@@ -11,6 +11,7 @@
 
 bool isLook = true;
 bool is_menu = false;
+bool is_poly = false;
 float cursor_pos_x;
 float cursor_pos_y;
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -174,8 +175,8 @@ public:
 
 	void Physics(float& deltaTime)
 	{
-		//DropCheck(deltaTime);
-		//if (isJump) JumpCheck(deltaTime);
+		DropCheck(deltaTime);
+		if (isJump) JumpCheck(deltaTime);
 		if (CubePlaceActive && cubeList[stuffIndex] != TYPE_NONE) RayCheckCube(GENERATE);
 		if (CubeDestroyActive) RayCheckCube(DESTROY);
 

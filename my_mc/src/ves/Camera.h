@@ -10,7 +10,7 @@ enum Camera_Movement
 
 class Camera
 {
-private:	
+private:
 public:	
 	float lastX = 0;
 	float lastY = 0;
@@ -23,8 +23,8 @@ public:
 	float movementSpeed = 6.5f;
 	bool firstMouse = true;
 
-	//glm::vec3 cameraPos = glm::vec3(5.f, 40.f, 5.f);
-	glm::vec3 cameraPos = glm::vec3(0.f, 60.f, 0.f);
+	glm::vec3 cameraPos = glm::vec3(5.f, 40.f, 5.f);
+	//glm::vec3 cameraPos = glm::vec3(1.f, 0.f, 1.f);
 	glm::vec3 cameraPosLastFrame = cameraPos;
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);

@@ -75,11 +75,11 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	//glEnable(GL_POLYGON_MODE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 	//glDepthFunc(GL_ALWAYS);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	//glEnable(GL_POLYGON_MODE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	Cursor cursor;
 	Terrain terrain;

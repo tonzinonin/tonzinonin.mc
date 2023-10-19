@@ -88,6 +88,7 @@ struct CubeStruct
     glm::vec3 location;
     CubeType type;
     BoxAxisStruct BoxAxis;
+    //float sampleCount;
 };
 
 class Terrain
@@ -202,107 +203,142 @@ public:
     }
     void TerrainInit()
     {
-        BoxAxisStruct tmp;
-        tmp.GetAxis(0, 0, 0);
-        CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
-        checkout[11][11][11]++;
+        //BoxAxisStruct tmp;
+        //tmp.GetAxis(0, 0, 0);
+        //CubeInfo.push_back({ glm::vec3(0.0f) , GRASS_BLOCK , tmp });
+        //checkout[11][11][11]++;
 
-        //for (int i = -10; i < 10; i += 1)
-        //{
-        //    for (int j = -10; j < 10; j += 1)
-        //    {
-        //        float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
-        //        mi = std::min(mi, perlin);
-        //        ma = std::max(ma, perlin);
-        //        //std::cout <<"noisevalue : "<< perlin << std::endl;
-        //        int y = 0;
-        //        while(1)
-        //        {
-        //            if (y > perlin * 10 + 10)
-        //            {
-        //                BoxAxisStruct tmp;
-        //                tmp.GetAxis(i, y, j);
-        //                CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , GRASS_BLOCK , tmp});
+        //BoxAxisStruct tmp2;
+        //tmp2.GetAxis(1, 0, 0);
+        //CubeInfo.push_back({ glm::vec3(1 , 0.0f , 0.0f) , GRASS_BLOCK , tmp2 });
+        //checkout[12][11][11]++;
 
-        //                checkout[i + 11][y + 11][j + 11]++;
-        //                break;
-        //            }         
+        for (int i = -10; i < 10; i += 1)
+        {
+            for (int j = -10; j < 10; j += 1)
+            {
+                float perlin = noise_sum(glm::vec2((float)i * 0.05, (float)j * 0.05));
+                mi = std::min(mi, perlin);
+                ma = std::max(ma, perlin);
+                //std::cout <<"noisevalue : "<< perlin << std::endl;
+                int y = 0;
+                while(1)
+                {
+                    if (y > perlin * 10 + 10)
+                    {
+                        BoxAxisStruct tmp;
+                        tmp.GetAxis(i, y, j);
+                        CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , GRASS_BLOCK , tmp});
 
-        //            BoxAxisStruct tmp;
-        //            tmp.GetAxis(i, y, j);
-        //            CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , DIRT , tmp});
+                        checkout[i + 11][y + 11][j + 11]++;
+                        break;
+                    }         
 
-        //            checkout[i + 11][y + 11][j + 11]++;
-        //            y += 1;
-        //        }
-        //    }
-        //}
+                    BoxAxisStruct tmp;
+                    tmp.GetAxis(i, y, j);
+                    CubeInfo.push_back({ glm::vec3(float(i) , float(y) , float(j)) , DIRT , tmp});
+
+                    checkout[i + 11][y + 11][j + 11]++;
+                    y += 1;
+                }
+            }
+        }
         //std::cout << "minvalue = " << mi << std::endl << "maxvalue = " << ma << std::endl;
     }
 
     void TerrainDraw(Camera& camera)
     {
-        VisbleCubeInfo.clear();
+        //GLuint queryID;
+        //glGenQueries(1, &queryID);
+
+        //GLuint *sampleCount;
+
+        //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+        //glDepthMask(GL_FALSE);
+
+        //int cnt = 0;
         for (auto it : CubeInfo)
         {
             //if (checkout[(int)it.location.x + 51][(int)it.location.y + 51][(int)it.location.z + 51] == 6) continue;
             if (ViewOptimize(it.location)) continue;
-            //else
-            //{
-            //    VisbleCubeInfo.push_back(it);
-            //}
-            switch (it.type)
-            {
-            case (GRASS_BLOCK): grass_block.DrawCube(camera, it.location);break;
-            case (DIRT):        dirt.DrawCube(camera, it.location);       break;
-            case (DIAMOND):     diamond.DrawCube(camera, it.location);    break;
-            case (OAK_LOG):     oak_log.DrawCube(camera, it.location);    break;
-            case (OAK_PLANKS):  oak_planks.DrawCube(camera, it.location); break;
-            case (SANDSTONE):   sandstone.DrawCube(camera, it.location);  break;
-            case (STONE):       stone.DrawCube(camera, it.location);      break;
-            case (TNT):         tnt.DrawCube(camera, it.location);        break;
-            case (WHITE_WOOL):  white_wool.DrawCube(camera, it.location); break;
 
-            case (BEDROCK):         bedrock.DrawCube(camera, it.location);         break;
-            case (BIRCH_PLANKS):    birch_planks.DrawCube(camera, it.location);    break;
-            case (BIRCH_LOG):	    birch_log.DrawCube(camera, it.location);       break;
-            case (BLOCK_OF_DIAMOND):block_of_diamond.DrawCube(camera, it.location);break;
-            case (BLACK_WOOL):	    black_wool.DrawCube(camera, it.location);      break;
-            case (BLOCK_OF_GOLD):	block_of_gold.DrawCube(camera, it.location);   break;
-            case (BLOCK_OF_EMERAL): block_of_emerald.DrawCube(camera, it.location);break;
-            case (BLOCK_OF_LAPIS):	block_of_lapis.DrawCube(camera, it.location);  break;
-            case (BLOCK_OF_IRON):	block_of_iron.DrawCube(camera, it.location);   break;
+            //glBeginQuery(GL_SAMPLES_PASSED, queryID);
 
-            case (BLOCK_OF_QUARTZ):  block_of_quartz.DrawCube(camera, it.location);   break;
-            case (BLOCK_OF_REDSTONE):block_of_redstone.DrawCube(camera, it.location); break;
-            case (BOOKSHELF):		 bookshelf.DrawCube(camera, it.location);         break;
-            case (BRICKS):			 bricks.DrawCube(camera, it.location);            break;
-            case (CARVED_PUMPKIN):	 carved_pumpkin.DrawCube(camera, it.location);    break;
-            case (COAL_ORE):		 coal_ore.DrawCube(camera, it.location);          break;
-            case (CRAFTING_TABLE):	 crafting_table.DrawCube(camera, it.location);    break;
-            case (EMERALD_ORE):		 emerald_ore.DrawCube(camera, it.location);       break;
-            case (FURNACE):			 furnace.DrawCube(camera, it.location);           break;
+            Draw(it);
 
-            case (GLASS):			 glass.DrawCube(camera, it.location);           break;
-            case (GLOWSTONE):		 glowstone.DrawCube(camera, it.location);       break;
-            case (GOLD_ORE):		 gold_ore.DrawCube(camera, it.location);        break;
-            case (HAY_BALE):		 hay_bale.DrawCube(camera, it.location);        break;
-            case (ICE):				 ice.DrawCube(camera, it.location);             break;
-            case (IRON_ORE):		 iron_ore.DrawCube(camera, it.location);        break;
-            case (LAPIS_LAZULI_ORE): lapis_lazuli_ore.DrawCube(camera, it.location);break;
-            case (LIGHT_BLUE_WOOL):	 light_blue_wool.DrawCube(camera, it.location); break;
-            case (LIME_WOOL):		 lime_wool.DrawCube(camera, it.location);       break;
+            //glEndQuery(GL_SAMPLES_PASSED);
 
-            case (MAGENTA_WOOL):	 magenta_wool.DrawCube(camera, it.location);    break;
-            case (ORANGE_WOOL):		 orange_wool.DrawCube(camera, it.location);     break;
-            case (PINK_WOOL):		 pink_wool.DrawCube(camera, it.location);       break;
-            case (RED_WOOL):		 red_wool.DrawCube(camera, it.location);        break;
-            case (YELLOW_WOOL):		 yellow_wool.DrawCube(camera, it.location);     break;
-            case (MELON):			 melon.DrawCube(camera, it.location);           break;
-            case (REDSTONE_ORE):	 redstone_ore.DrawCube(camera, it.location);    break;
-            case (SAND):			 sand.DrawCube(camera, it.location);            break;
-            case (STONE_BRICKS):	 stone_bricks.DrawCube(camera, it.location);    break;
-            }
+        }
+
+        //glGetQueryObjectuiv(queryID, GL_QUERY_RESULT, sampleCount);
+
+        /*glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glDepthMask(GL_TRUE);
+
+        for(auto it : CubeInfo)
+        { 
+            if(sampleCount)
+            Draw(it);
+        }*/
+
+        //VisbleCubeInfo.clear();
+        //glDeleteQueries(1, &queryID);
+    }
+
+    void Draw(CubeStruct& it)
+    {
+        switch (it.type)
+        {
+        case (GRASS_BLOCK): grass_block.DrawCube(camera, it.location); break;
+        case (DIRT):        dirt.DrawCube(camera, it.location);       break;
+        case (DIAMOND):     diamond.DrawCube(camera, it.location);    break;
+        case (OAK_LOG):     oak_log.DrawCube(camera, it.location);    break;
+        case (OAK_PLANKS):  oak_planks.DrawCube(camera, it.location); break;
+        case (SANDSTONE):   sandstone.DrawCube(camera, it.location);  break;
+        case (STONE):       stone.DrawCube(camera, it.location);      break;
+        case (TNT):         tnt.DrawCube(camera, it.location);        break;
+        case (WHITE_WOOL):  white_wool.DrawCube(camera, it.location); break;
+
+        case (BEDROCK):         bedrock.DrawCube(camera, it.location);         break;
+        case (BIRCH_PLANKS):    birch_planks.DrawCube(camera, it.location);    break;
+        case (BIRCH_LOG):	    birch_log.DrawCube(camera, it.location);       break;
+        case (BLOCK_OF_DIAMOND):block_of_diamond.DrawCube(camera, it.location); break;
+        case (BLACK_WOOL):	    black_wool.DrawCube(camera, it.location);      break;
+        case (BLOCK_OF_GOLD):	block_of_gold.DrawCube(camera, it.location);   break;
+        case (BLOCK_OF_EMERAL): block_of_emerald.DrawCube(camera, it.location); break;
+        case (BLOCK_OF_LAPIS):	block_of_lapis.DrawCube(camera, it.location);  break;
+        case (BLOCK_OF_IRON):	block_of_iron.DrawCube(camera, it.location);   break;
+
+        case (BLOCK_OF_QUARTZ):  block_of_quartz.DrawCube(camera, it.location);   break;
+        case (BLOCK_OF_REDSTONE):block_of_redstone.DrawCube(camera, it.location); break;
+        case (BOOKSHELF):		 bookshelf.DrawCube(camera, it.location);         break;
+        case (BRICKS):			 bricks.DrawCube(camera, it.location);            break;
+        case (CARVED_PUMPKIN):	 carved_pumpkin.DrawCube(camera, it.location);    break;
+        case (COAL_ORE):		 coal_ore.DrawCube(camera, it.location);          break;
+        case (CRAFTING_TABLE):	 crafting_table.DrawCube(camera, it.location);    break;
+        case (EMERALD_ORE):		 emerald_ore.DrawCube(camera, it.location);       break;
+        case (FURNACE):			 furnace.DrawCube(camera, it.location);           break;
+
+        case (GLASS):			 glass.DrawCube(camera, it.location);           break;
+        case (GLOWSTONE):		 glowstone.DrawCube(camera, it.location);       break;
+        case (GOLD_ORE):		 gold_ore.DrawCube(camera, it.location);        break;
+        case (HAY_BALE):		 hay_bale.DrawCube(camera, it.location);        break;
+        case (ICE):				 ice.DrawCube(camera, it.location);             break;
+        case (IRON_ORE):		 iron_ore.DrawCube(camera, it.location);        break;
+        case (LAPIS_LAZULI_ORE): lapis_lazuli_ore.DrawCube(camera, it.location); break;
+        case (LIGHT_BLUE_WOOL):	 light_blue_wool.DrawCube(camera, it.location); break;
+        case (LIME_WOOL):		 lime_wool.DrawCube(camera, it.location);       break;
+
+        case (MAGENTA_WOOL):	 magenta_wool.DrawCube(camera, it.location);    break;
+        case (ORANGE_WOOL):		 orange_wool.DrawCube(camera, it.location);     break;
+        case (PINK_WOOL):		 pink_wool.DrawCube(camera, it.location);       break;
+        case (RED_WOOL):		 red_wool.DrawCube(camera, it.location);        break;
+        case (YELLOW_WOOL):		 yellow_wool.DrawCube(camera, it.location);     break;
+        case (MELON):			 melon.DrawCube(camera, it.location);           break;
+        case (REDSTONE_ORE):	 redstone_ore.DrawCube(camera, it.location);    break;
+        case (SAND):			 sand.DrawCube(camera, it.location);            break;
+        case (STONE_BRICKS):	 stone_bricks.DrawCube(camera, it.location);    break;
+
         }
     }
 
@@ -316,7 +352,7 @@ public:
         float angle_cos = glm::dot(CubeVec, glm::normalize(camera.cameraFront));
         //float angle_cos = CubeVec.x * camera.cameraFront.x + CubeVec.y * camera.cameraFront.y + CubeVec.z * camera.cameraFront.z;
         if (dist < 4.) return false;
-        if((angle_cos < glm::cos(glm::radians(camera.fov)) || dist > 400.))
+        if((angle_cos < glm::cos(glm::radians(camera.fov + 5)) || dist > 600.))
         //if (angle_cos < 0.766)
         {
             return true;
